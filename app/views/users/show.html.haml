@@ -1,0 +1,24 @@
+%p#notice= notice
+
+%p
+  %b Name:
+  = @user.name
+%p
+  %b Email:
+  = @user.email
+%p
+  %b Remember token:
+  = @user.remember_token
+%p
+  %b Password digest:
+  = @user.password_digest
+%p
+  %b Admin:
+  = @user.admin
+%p
+  %b Password confirmation:
+  = @user.password_confirmation
+
+- if correct_or_admin_user?
+  = link_to 'Edit Information', edit_user_path(@user)
+  = link_to "Delete Account", @user, :method => :delete, :data => { :confirm => 'Are you sure?' }
