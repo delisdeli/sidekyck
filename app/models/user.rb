@@ -1,10 +1,10 @@
 class User < ActiveRecord::Base
 
   has_many :notifications
-  #attr_accessible :name, :email, :remember_token#, :password, :password_confirmation
   has_secure_password
 
   before_save { |user| user.email = email.downcase }
+  before_save :restrict_max_notifications
 
   validates :name, presence: true, length: { maximum: 50 }
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
@@ -21,6 +21,32 @@ class User < ActiveRecord::Base
   def User.encrypt(token)
     Digest::SHA1.hexdigest(token.to_s)
   end
+
+  def unseen_notifications
+    self.notifications.where(seen: false)
+  end
+
+  def unseen_notifications_count
+    self.unseen_notifications.size
+  end
+
+  def unseen_notifications?
+    self.unseen_notifications_count != 0
+  end
+
+  def restrict_max_notifications
+    notifications_count = self.notifications.size
+    if notifications_count > 50
+      (notifications_count-50).times do 
+        self.notifications.order(:created_at).first.delete
+      end
+    end
+  end
+
+  def read_notifications
+    self.notifications.where(seen: false).each{ |notif| notif.update_attributes(seen: true) }
+  end
+
 
   private
 

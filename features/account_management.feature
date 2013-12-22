@@ -101,7 +101,7 @@ Scenario: A user can delete their own account
   When I follow "Delete Account"
   And I accept the alert
   Then I should be on the home page
-  And "user1" should not exist
+  And user "user1" should not exist
 
 @javascript
 Scenario: An admin can delete a user record
@@ -110,7 +110,7 @@ Scenario: An admin can delete a user record
   When I follow "Delete Account"
   And I accept the alert
   Then I should be on the home page
-  And "user2" should not exist
+  And user "user2" should not exist
 
 #Scenario: Non-existent user show should give nice error
 #  Given I am on the profile page for id "20"

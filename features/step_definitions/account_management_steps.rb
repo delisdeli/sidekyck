@@ -12,7 +12,7 @@ Given /the following users exist/ do |users_table|
   end
 end
 
-Then(/^"(.*?)" should not exist$/) do |user|
+Then /^user "(.*?)" should not exist$/ do |user|
   user_id = User.find_by_name(user)
   user_id == nil
 end

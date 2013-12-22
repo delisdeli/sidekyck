@@ -1,9 +1,9 @@
 %div.user-bar
   %div.logo 
     = link_to "Boost", root_path
-  / - if signed_in?
-  /   %div.notification-icon
-  /     = render "shared/notifications"
+  - if signed_in?
+    %div.notification-icon
+      = render "shared/notifications"
   %div.right
     - if signed_in?
       = link_to "#{current_user.name}", current_user

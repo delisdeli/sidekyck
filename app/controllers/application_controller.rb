@@ -4,6 +4,22 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   include SessionsHelper
 
+  before_filter :check_for_notifications
+
+  def check_for_notifications
+    if params[:show_notifications] == "true"
+      @show_notifications = true
+      begin
+        @user = User.find_by_id(params[:user_id])
+      rescue Exception => e
+        redirect_to root_url, notice: "That user doesn't exist" unless @user
+        return
+      end
+      @unseen_notifications = @user.unseen_notifications
+      @user.read_notifications
+    end
+  end
+
   def signed_in_user
     unless signed_in?
     store_location
