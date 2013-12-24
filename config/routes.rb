@@ -1,5 +1,7 @@
 Boost::Application.routes.draw do
-
+  
+  get "friendship/create"
+  get "friendship/destroy"
   resources :users
   resources :sessions, only: [:new, :create, :destroy]
 

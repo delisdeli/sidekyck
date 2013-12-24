@@ -51,4 +51,8 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def store_referer
+    session[:return_to] = request.referer
+  end
+
 end

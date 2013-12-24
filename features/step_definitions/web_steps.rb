@@ -31,6 +31,42 @@ module WithinHelpers
 end
 World(WithinHelpers)
 
+Then /I should see "(.*)" between "(.*)" and "(.*)"/ do |e1, e2, e3|
+  #  ensure that that e1 occurs before e2.
+  #  page.body is the entire content of the page as a string.
+  assert page.body =~ /.*#{e2}.*#{e1}.*#{e3}.*/m, "not sorted correctly"
+end
+
+Then /I should see "(.*)" before "(.*)"/ do |e1, e2|
+  #  ensure that that e1 occurs before e2.
+  #  page.body is the entire content of the page as a string.
+  assert page.body =~ /.*#{e1}.*#{e2}.*/m, "not sorted correctly"
+end
+
+Then /I should see "(.*)" after "(.*)"/ do |e1, e2|
+  #  ensure that that e1 occurs before e2.
+  #  page.body is the entire content of the page as a string.
+  assert page.body =~ /.*#{e2}.*#{e1}.*/m, "not sorted correctly"
+end
+
+Then /I should not see "(.*)" between "(.*)" and "(.*)"/ do |e1, e2, e3|
+  #  ensure that that e1 occurs before e2.
+  #  page.body is the entire content of the page as a string.
+  assert (not page.body === /.*#{e2}.*#{e1}.*#{e3}.*/m), "not sorted correctly"
+end
+
+Then /I should not see "(.*)" before "(.*)"/ do |e1, e2|
+  #  ensure that that e1 occurs before e2.
+  #  page.body is the entire content of the page as a string.
+  assert (not page.body === /.*#{e1}.*#{e2}.*/m), "not sorted correctly"
+end
+
+Then /I should not see "(.*)" after "(.*)"/ do |e1, e2|
+  #  ensure that that e1 occurs before e2.
+  #  page.body is the entire content of the page as a string.
+  assert (not page.body === /.*#{e2}.*#{e1}.*/m), "not sorted correctly"
+end
+
 # Single-line step scoper
 When /^(.*) within (.*[^:])$/ do |step, parent|
   with_scope(parent) { When step }

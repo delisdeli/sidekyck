@@ -6,22 +6,48 @@
 %p
   %b Email:
   = @user.email
-%p
-  %b Remember token:
-  = @user.remember_token
-%p
-  %b Password digest:
-  = @user.password_digest
-%p
-  %b Admin:
-  = @user.admin
-%p
-  %b Password confirmation:
-  = @user.password_confirmation
+
+- if current_user.is_friends_with? @user
+  %p
+    Already Friends
+    = link_to "End Friendship", friendship_destroy_path(friend_id: @user)
+- elsif current_user.sent_friendship_request_to? @user
+  %p
+    Friend Request Sent
+    = link_to "Cancel Request", friendship_destroy_path(friend_id: @user)
+- elsif current_user.has_friendship_request_from? @user
+  %p
+    Wants to be Friends
+    = link_to "Accept Friendship", friendship_create_path(accept_request: true, friend_id: requested_friend)
+    = link_to "Decline Friendship", friendship_destroy_path(friend_id: @user)
+
+- elsif not current_user? @user
+  %p= link_to "Add Friend", friendship_create_path(friend_id: @user, sent_request: true,)
 
 %h1 Notifications
 - @user.notifications.each do |notification|
   %p= notification.body
+
+%h1 Friends
+- @user.friends.each do |friend|
+  %p
+    = link_to friend.name, friend
+    = link_to "End Friendship", friendship_destroy_path(friend_id: friend)
+
+- if current_user? @user
+  %h1 Friend Requests
+  - @user.requested_friends.each do |requested_friend|
+    %p
+      = link_to requested_friend.name, requested_friend
+      = link_to "Accept Friendship", friendship_create_path(accept_request: true, friend_id: requested_friend)
+      = link_to "Decline Friendship", friendship_destroy_path(friend_id: requested_friend)
+
+  %h1 Friends Pending
+  - @user.pending_friends.each do |pending_friend|
+    %p
+      = link_to pending_friend.name, pending_friend
+      = link_to "Cancel Request", friendship_destroy_path(friend_id: pending_friend)
+
 
 - if correct_or_admin_user?
   = link_to 'Edit Information', edit_user_path(@user)

@@ -1,6 +1,14 @@
 class User < ActiveRecord::Base
 
   has_many :notifications
+  has_many :friendships
+  has_many :accepted_friendships, -> { where status: 'accepted'}, :class_name => "Friendship"
+  has_many :requested_friendships, -> { where status: 'requested'}, :class_name => "Friendship"
+  has_many :pending_friendships, -> { where status: 'pending'}, :class_name => "Friendship"
+  has_many :friends, :through => :accepted_friendships
+  has_many :requested_friends, :through => :requested_friendships, :source => :friend
+  has_many :pending_friends, :through => :pending_friendships, :source => :friend
+  
   has_secure_password
 
   before_save { |user| user.email = email.downcase }
@@ -47,6 +55,21 @@ class User < ActiveRecord::Base
     self.notifications.where(seen: false).each{ |notif| notif.update_attributes(seen: true) }
   end
 
+  def has_friendship_with? friend
+    self.friendships.find_by_friend_id friend
+  end
+
+  def is_friends_with? friend
+    self.accepted_friendships.find_by_friend_id friend
+  end
+
+  def sent_friendship_request_to? friend
+    self.pending_friendships.find_by_friend_id friend
+  end
+
+  def has_friendship_request_from? friend
+    self.requested_friendships.find_by_friend_id friend
+  end
 
   private
 
