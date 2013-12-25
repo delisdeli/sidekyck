@@ -3,7 +3,7 @@ class Friendship < ActiveRecord::Base
   belongs_to :friend, :class_name => "User"
 
   def self.request(user, friend)
-    unless user == friend or Friendship.exists?(user_id: user, friend_id: friend)
+    unless cannot_request_friendship(user, friend)
       transaction do
         Friendship.create(:user => user, :friend => friend, :status => 'pending')
         Friendship.create(:user => friend, :friend => user, :status => 'requested')
@@ -14,7 +14,7 @@ class Friendship < ActiveRecord::Base
   end
 
   def self.accept(user, friend)
-    unless user == friend or Friendship.exists?(user_id: user, friend_id: friend, status: 'active')
+    unless cannot_accept_friendship(user, friend)
       transaction do
         accept_one_side(user, friend)
         accept_one_side(friend, user)
@@ -23,6 +23,15 @@ class Friendship < ActiveRecord::Base
       return "failed"
     end
   end
+
+  def self.cannot_request_friendship(user, friend)
+    user == friend or Friendship.exists?(user_id: user, friend_id: friend)
+  end
+
+  def self.cannot_accept_friendship(user, friend)
+    user == friend or Friendship.exists?(user_id: user, friend_id: friend, status: 'active')
+  end
+
 
   def self.accept_one_side(user, friend)
     request = find_by_user_id_and_friend_id(user, friend)

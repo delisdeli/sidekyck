@@ -1,7 +1,7 @@
 class User < ActiveRecord::Base
 
-  has_many :notifications
-  has_many :friendships
+  has_many :notifications,  dependent: :destroy
+  has_many :friendships,  dependent: :delete_all
   has_many :accepted_friendships, -> { where status: 'accepted'}, :class_name => "Friendship"
   has_many :requested_friendships, -> { where status: 'requested'}, :class_name => "Friendship"
   has_many :pending_friendships, -> { where status: 'pending'}, :class_name => "Friendship"
@@ -13,6 +13,7 @@ class User < ActiveRecord::Base
 
   before_save { |user| user.email = email.downcase }
   before_save :restrict_max_notifications
+  before_destroy :destroy_complementary_friendships
 
   validates :name, presence: true, length: { maximum: 50 }
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
@@ -38,7 +39,7 @@ class User < ActiveRecord::Base
     self.unseen_notifications.size
   end
 
-  def unseen_notifications?
+  def has_unseen_notifications?
     self.unseen_notifications_count != 0
   end
 
@@ -69,6 +70,24 @@ class User < ActiveRecord::Base
 
   def has_friendship_request_from? friend
     self.requested_friendships.find_by_friend_id friend
+  end
+
+  def send_friend_request_notification(user)
+    self.notifications.build( seen: false,
+                              tunnel: "/users/#{user.id}",
+                              body: "#{user.name} has sent you a friend request.")
+    self.save(validate: false)
+  end
+
+  def send_friend_acceptance_notification(user)
+    self.notifications.build( seen: false,
+                              tunnel: "/users/#{user.id}",
+                              body: "You are now friends with #{user.name}!")
+    self.save(validate: false)
+  end
+
+  def destroy_complementary_friendships
+    Friendship.destroy_all(friend_id: self.id)
   end
 
   private

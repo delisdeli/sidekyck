@@ -16,6 +16,7 @@ class ApplicationController < ActionController::Base
         return
       end
       @unseen_notifications = @user.unseen_notifications
+      p @unseen_notifications
       @user.read_notifications
     end
   end

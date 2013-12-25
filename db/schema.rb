@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131224000826) do
+ActiveRecord::Schema.define(version: 20131225000557) do
 
   create_table "friendships", force: true do |t|
     t.integer  "user_id"
@@ -29,6 +29,7 @@ ActiveRecord::Schema.define(version: 20131224000826) do
     t.boolean  "seen"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "tunnel"
   end
 
   add_index "notifications", ["user_id"], name: "index_notifications_on_user_id"

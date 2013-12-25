@@ -1,4 +1,4 @@
-Feature: Friendship
+Feature: Friendship management
  
   As a user
   So that I can create relationships with other users
@@ -52,7 +52,7 @@ Scenario: A user can delete a friendship request they sent
   Then I should see "user4" between "Friends Pending" and "Cancel Request"
   When I follow "Cancel Request"
   Then I should see "Friend request canceled."
-  Then I should not see "user3" after "Friends Pending"
+  Then I should not see "user4" after "Friends Pending"
   Given I am on the profile page for "user4"
   Then I should not see "user3" after "Friends"
   Given I follow "Add Friend"
@@ -60,7 +60,7 @@ Scenario: A user can delete a friendship request they sent
   Then I should see "Friend request canceled."
   When I am logged in as "user4" with password "password"
   And I am on the profile page for "user4"
-  Then I should not see "user3"
+  Then I should not see "user3" after "Friends"
 
 Scenario: A user cannot delete another users friendship request
   Given I am logged in as "user1" with password "password"
@@ -113,4 +113,13 @@ Scenario: After a user deletes a friendship, they will both no longer have a fri
   Given I am on the profile page for "user2"
   Then I should not see "user1" after "Friends"
 
+@javascript
 Scenario: When a user deletes his account, all his friendships should be deleted
+  Given I am logged in as "user1" with password "password"
+  And I am on the profile page for "user1"
+  And I follow "Delete Account"
+  And I accept the alert
+  And I am on the profile page for "user3"
+  Then I should not see "user1" after "Friends"
+  And no friendship should have friend or user id "1"
+  

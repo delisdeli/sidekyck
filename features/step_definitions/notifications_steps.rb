@@ -14,3 +14,7 @@ Given /^I create "(.*?)" new notifications for "(.*?)"$/ do |number, user|
     user.save(validate: false)
   end
 end
+
+And /^no notification should have user id "(.*)"$/ do |user_id|
+  assert Notification.where(user_id: user_id).empty?
+end

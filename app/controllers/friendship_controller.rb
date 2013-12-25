@@ -6,12 +6,14 @@ class FriendshipController < ApplicationController
     if params[:sent_request]
       unless Friendship.request(current_user, friend) == "failed"
         flash[:notice] = "Friendship request sent."
+        friend.send_friend_request_notification(current_user)
       else
         flash[:notice] = "Friend request pending."
       end
     elsif params[:accept_request]
       unless Friendship.accept(current_user, friend) == "failed"
         flash[:notice] = "You are now friends!"
+        friend.send_friend_acceptance_notification(current_user)
       else
         flash[:notice] = "You are already friends."
       end
