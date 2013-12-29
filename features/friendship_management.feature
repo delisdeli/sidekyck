@@ -42,7 +42,8 @@ Scenario: A user can send a friend request to another user and they will have a 
   And I should not see "Add Friend"
   Given I am on the profile page for "user1"
   Then I should see "user2" after "Friends Pending"
-  Given I am logged in as "user2" with password "password"
+  Given I follow "Sign out"
+  And I am logged in as "user2" with password "password"
   And I am on the profile page for "user2"
   Then I should see "user1" between "Friend Requests" and "Friends Pending"
 
@@ -58,7 +59,8 @@ Scenario: A user can delete a friendship request they sent
   Given I follow "Add Friend"
   And I follow "Cancel Request"
   Then I should see "Friend request canceled."
-  When I am logged in as "user4" with password "password"
+  Given I follow "Sign out"
+  And I am logged in as "user4" with password "password"
   And I am on the profile page for "user4"
   Then I should not see "user3" after "Friends"
 
@@ -74,7 +76,8 @@ Scenario: After a user accepts a request, they will both have complementary 'acc
   Then I should be on the profile page for "user2"
   And I should see "Friend Request Sent" between "user2" and "Friends"
   And I should not see "Add Friend"
-  Given I am logged in as "user2" with password "password"
+  Given I follow "Sign out"
+  And I am logged in as "user2" with password "password"
   And I am on the profile page for "user2"
   Then I should see "user1" between "Friend Requests" and "Friends Pending"
   When I follow "Accept Friendship"
@@ -117,7 +120,8 @@ Scenario: After a user deletes a friendship, they will both no longer have a fri
 Scenario: When a user deletes his account, all his friendships should be deleted
   Given I am logged in as "user1" with password "password"
   And I am on the profile page for "user1"
-  And I follow "Delete Account"
+  And I follow "Edit Information"
+  And I press "Cancel My Account"
   And I accept the alert
   And I am on the profile page for "user3"
   Then I should not see "user1" after "Friends"

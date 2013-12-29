@@ -1,0 +1,5 @@
+%h1 Friends Pending
+- @user.pending_friends.each do |pending_friend|
+  %p
+    = link_to pending_friend.name, pending_friend
+    = link_to "Cancel Request", friendship_destroy_path(friend_id: pending_friend)

@@ -1,8 +1,9 @@
 Boost::Application.routes.draw do
   
-  resources :listings
-
   devise_for :users
+  resources :listings
+  resources :users, only: [:show]
+
   get "friendship/create"
   get "friendship/destroy"
 

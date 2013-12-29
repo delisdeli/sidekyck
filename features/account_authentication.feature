@@ -11,16 +11,16 @@ Feature: Account Authentication
 
 Scenario: an existing user can log in
   Given I am on the signin page
-  And I fill in "session[email]" with "user1@email.com"
-  And I fill in "session[password]" with "password"
+  And I fill in "user[email]" with "user1@email.com"
+  And I fill in "user[password]" with "password"
   When I press "Sign in"
-  Then I should see "Welcome"
+  Then I should see "Signed in successfully."
   And I should see "user1"
 
 Scenario: an existing user will not be logged in given the wrong password
   Given I am on the signin page
-  And I fill in "session[email]" with "user1@email.com"
-  And I fill in "session[password]" with "wrongpassword"
+  And I fill in "user[email]" with "user1@email.com"
+  And I fill in "user[password]" with "wrongpassword"
   When I press "Sign in"
   Then I should see "Invalid"
   And I should not see "user1"

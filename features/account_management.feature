@@ -17,8 +17,8 @@ Scenario: a user can be created
   And I fill in "user[email]" with "someemail@email.com"
   And I fill in "user[password]" with "password"
   And I fill in "user[password_confirmation]" with "password"
-  When I press "Save"
-  Then I should be on the profile page for "somename"
+  When I press "Sign Up"
+  And I am on the profile page for "somename"
   And I should see "somename"
   And I should not see "password"
 
@@ -28,7 +28,7 @@ Scenario: a user will not be created if the email is already taken
   And I fill in "user[email]" with "user1@email.com"
   And I fill in "user[password]" with "password"
   And I fill in "user[password_confirmation]" with "password"
-  When I press "Save"
+  When I press "Sign Up"
   And I should see "taken"
   And I should see "Sign in"
 
@@ -38,19 +38,19 @@ Scenario: a user will not be created if password doesn't match password_confirma
   And I fill in "user[email]" with "someemail@email.com"
   And I fill in "user[password]" with "password"
   And I fill in "user[password_confirmation]" with "wrongpassword"
-  When I press "Save"
+  When I press "Sign Up"
   Then I should see "doesn't match"
 
 Scenario: a user will not be created if email is not in the correct form
   Given I am on the signup page
   And I fill in "user[email]" with "email@berkeleycom"
-  When I press "Save"
+  When I press "Sign Up"
   Then I should see "Email is invalid"
   And I fill in "user[email]" with "email@berkeleycom"
-  When I press "Save"
+  When I press "Sign Up"
   Then I should see "Email is invalid"
   And I fill in "user[email]" with "emailberkeleycom"
-  When I press "Save"
+  When I press "Sign Up"
   Then I should see "Email is invalid"
 
 Scenario: an existing user can edit his information by confirming his password
@@ -61,9 +61,10 @@ Scenario: an existing user can edit his information by confirming his password
   And I fill in "user[email]" with "changedemail@email.com"
   And I fill in "user[password]" with "newpassword"
   And I fill in "user[password_confirmation]" with "newpassword"
-  And I fill in "user[password_authenticate]" with "password"
-  And I press "Save"
-  Then I should see "Information was successfully updated."
+  And I fill in "user[current_password]" with "password"
+  And I press "Update"
+  Then I should see "You updated your account successfully."
+  When I am on the profile page for "changedusername"
   And I should see "changedusername"
   And I should see "changedemail@email.com"
 
@@ -75,42 +76,36 @@ Scenario: a user cannot change their information unless their password is confir
   And I fill in "user[email]" with "changedemail@email.com"
   And I fill in "user[password]" with "newpassword"
   And I fill in "user[password_confirmation]" with "newpassword"
-  And I fill in "user[password_authenticate]" with "wrongpassword"
-  And I press "Save"
-  Then I should see "Wrong password."
+  And I fill in "user[current_password]" with "wrongpassword"
+  And I press "Update"
+  Then I should see "Current password is invalid"
   And I should not see "changedusername"
   And I should see "user1"
-
-Scenario: A non-admin user cannot edit other users
-  Given I am logged in as "user2" with password "password"
-  And I am on the profile page for "user1"
-  Then I should not see "Edit Information"
-  Given I am on the edit page for user "user1"
-  Then I should be on the home page
-  And I should see "You are not authorized to access this function."
 
 Scenario: A non-admin cannot delete someone else's account
   Given I am logged in as "user1" with password "password"
   And I am on the profile page for "user2"
   Then I should not see "Delete Account"
+  And I should not see "Cancel My Account"
 
 @javascript
 Scenario: A user can delete their own account
   Given I am logged in as "user1" with password "password"
   And I am on the profile page for "user1"
-  When I follow "Delete Account"
+  When I follow "Edit Information"
+  And I press "Cancel My Account"
   And I accept the alert
   Then I should be on the home page
   And user "user1" should not exist
 
-@javascript
-Scenario: An admin can delete a user record
-  Given I am logged in as "admin" with password "password"
-  And I am on the profile page for "user2"
-  When I follow "Delete Account"
-  And I accept the alert
-  Then I should be on the home page
-  And user "user2" should not exist
+#@javascript
+#Scenario: An admin can delete a user record
+#  Given I am logged in as "admin" with password "password"
+#  And I am on the profile page for "user2"
+#  When I follow "Delete Account"
+#  And I accept the alert
+#  Then I should be on the home page
+#  And user "user2" should not exist
 
 #Scenario: Non-existent user show should give nice error
 #  Given I am on the profile page for id "20"

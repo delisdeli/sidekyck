@@ -1,0 +1,5 @@
+%h1 Friends
+- @user.friends.each do |friend|
+  %p
+    = link_to friend.name, friend
+    = link_to "End Friendship", friendship_destroy_path(friend_id: friend)

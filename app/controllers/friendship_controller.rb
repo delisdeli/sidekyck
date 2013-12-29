@@ -1,5 +1,6 @@
 class FriendshipController < ApplicationController
   before_filter :store_referer
+  before_filter :authenticate_user!
 
   def create
     friend = User.find_by_id(params[:friend_id])

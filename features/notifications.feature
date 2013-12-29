@@ -10,8 +10,8 @@ Feature: Notifications
     | user  | user1@email.com  | password  | password               | false  |
 
     Given the following notifications exist:
-    | user_id  | body                        | seen  | tunnel   |
-    | 1        | contents of notification    | false | /signin  |
+    | user_id  | body                        | seen  | tunnel  |
+    | 1        | contents of notification    | false | /       |
 
     Given I am logged in as "user" with password "password"
 
@@ -58,13 +58,13 @@ Scenario: a notification with a path will be clickable
   Given I am on the homepage
   And I follow "notifications"
   And I follow "contents of notification"
-  Then I should be on the signin page
+  Then I should be on the home page
 
 @javascript
 Scenario: When a user deletes his account, all his notifications should be deleted
-  Given I am logged in as "user" with password "password"
-  And I am on the profile page for "user"
-  And I follow "Delete Account"
+  Given I am on the profile page for "user"
+  And I follow "Edit Information"
+  And I press "Cancel My Account"
   And I accept the alert
   Then I should be on the homepage
   And no notification should have user id "1"

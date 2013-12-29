@@ -1,0 +1,17 @@
+- if user_signed_in?
+  - if current_user.is_friends_with? @user
+    %p
+      Already Friends
+      = link_to "End Friendship", friendship_destroy_path(friend_id: @user)
+  - elsif current_user.sent_friendship_request_to? @user
+    %p
+      Friend Request Sent
+      = link_to "Cancel Request", friendship_destroy_path(friend_id: @user)
+  - elsif current_user.has_friendship_request_from? @user
+    %p
+      Wants to be Friends
+      = link_to "Accept Friendship", friendship_create_path(accept_request: true, friend_id: @user)
+      = link_to "Decline Friendship", friendship_destroy_path(friend_id: @user)
+
+  - elsif not @user.is_user? current_user
+    %p= link_to "Add Friend", friendship_create_path(friend_id: @user, sent_request: true)
