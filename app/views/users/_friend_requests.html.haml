@@ -1,6 +1,0 @@
-%h1 Friend Requests
-- @user.requested_friends.each do |requested_friend|
-  %p
-    = link_to requested_friend.name, requested_friend
-    = link_to "Accept Friendship", friendship_create_path(accept_request: true, friend_id: requested_friend)
-    = link_to "Decline Friendship", friendship_destroy_path(friend_id: requested_friend)

@@ -1,0 +1,27 @@
+%p#notice= notice
+
+%p
+  %b Price:
+  = @listing.price
+%p
+  %b Instructions:
+  = @listing.instructions
+%p
+  %b Title:
+  = @listing.title
+%p
+  %b Start time:
+  = @listing.start_time
+%p
+  %b End time:
+  = @listing.end_time
+%p
+  %b Requirements:
+  = @listing.requirements
+%p
+  %b Status:
+  = @listing.status
+
+= link_to 'Edit', edit_listing_path(@listing)
+\|
+= link_to 'Back', listings_path
