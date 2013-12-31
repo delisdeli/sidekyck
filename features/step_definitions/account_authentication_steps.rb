@@ -5,3 +5,7 @@ Given /I am logged in as "(.*)" with password "(.*)"$/ do |name, password|
   fill_in("user[password]", :with => password)
   click_button("Sign in")
 end
+
+Given /^I am signed in with provider "(.*)"$/ do |provider|
+  visit "/auth/#{provider.downcase}"
+end

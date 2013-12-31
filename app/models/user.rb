@@ -1,9 +1,6 @@
 class User < ActiveRecord::Base
-  # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable and :omniauthable
-  devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :trackable, :validatable
 
+  has_many :providers, dependent: :destroy
   has_many :notifications,  dependent: :destroy
   has_many :friendships,  dependent: :delete_all
   has_many :accepted_friendships, -> { where status: 'accepted'}, :class_name => "Friendship"
@@ -15,6 +12,15 @@ class User < ActiveRecord::Base
 
   before_save :restrict_max_notifications
   before_destroy :destroy_complementary_friendships
+
+  def add_provider(auth)
+    provider = self.providers.build(name: auth["provider"], uid: auth["uid"])
+    if provider.name == "facebook"
+      provider.oauth_token = auth["credentials"]["token"]
+      provider.oauth_expires_at = Time.at(auth["credentials"]["expires_at"])
+    end
+    self.save!
+  end
 
   def is_user? current_user
     self == current_user
@@ -74,6 +80,7 @@ class User < ActiveRecord::Base
                               body: "You are now friends with #{user.name}!")
     self.save(validate: false)
   end
+  
 
   def destroy_complementary_friendships
     Friendship.destroy_all(friend_id: self.id)

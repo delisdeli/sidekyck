@@ -1,12 +1,15 @@
 Boost::Application.routes.draw do
   
-  devise_for :users
-  resources :listings
-  resources :users, only: [:show]
+  # match '/signup', to: 'users#new', via: [:get, :post]
+  match '/auth/:provider/callback', to: 'sessions#create', via: [:get, :post]
+  match '/signout', to: 'sessions#destroy', via: [:get, :post]
+  # match '/signin', to: 'sessions#new', via: [:get, :post]
 
   get "friendship/create"
   get "friendship/destroy"
 
+  resources :listings
+  resources :users
   # resources :sessions, only: [:new, :create, :destroy]
 
   # match '/signup', to: 'users#new', via: 'get'

@@ -1,9 +1,6 @@
 %p
   %b Name:
   = @user.name
-%p
-  %b Email:
-  = @user.email
 
 = render 'profile_friendship'
 = render 'notification_list'
@@ -12,5 +9,5 @@
 - if @user.is_user? current_user
   = render 'friend_requests'
   = render 'friends_pending'
-  = link_to 'Edit Information', edit_user_registration_path
+  /= link_to 'Edit Information', edit_user_registration_path
   

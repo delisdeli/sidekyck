@@ -7,7 +7,16 @@
   <%= csrf_meta_tags %>
 </head>
 <body>
-  <%= render 'shared/user_bar' %>
+  <% if current_user %>
+    Welcome <%= link_to current_user.name, current_user %>!
+    <%= link_to "Sign Out", signout_path %>
+  <% else %>
+    <%= link_to "Sign in with Twitter", "/auth/twitter" %>
+    <%= link_to "Sign in with Facebook", "/auth/facebook" %>
+    Don't use these services?
+    <%= link_to "Create an account", "/auth/identity/register" %> or
+    <%= link_to "login", "/auth/identity" %> with a password.
+  <% end %>
   <% flash.each do |key, value| %>
     <div class="flash"><%= value %></div>
   <% end %>

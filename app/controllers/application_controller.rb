@@ -5,8 +5,15 @@ class ApplicationController < ActionController::Base
   # include SessionsHelper
 
   before_filter :check_for_notifications
-  before_filter :configure_permitted_parameters, if: :devise_controller?
+  helper_method :current_user, :signed_in?
 
+  def current_user
+    @current_user ||= User.find_by_id(session[:user_id])
+  end
+
+  def signed_in?
+    !!current_user
+  end
 
   def check_for_notifications
     if params[:show_notifications] == "true"
@@ -56,13 +63,6 @@ class ApplicationController < ActionController::Base
 
   def store_referer
     session[:return_to] = request.referer
-  end
-
-  protected
-
-  def configure_permitted_parameters
-    devise_parameter_sanitizer.for(:sign_up) << :name
-    devise_parameter_sanitizer.for(:account_update) << :name
   end
 
 end
