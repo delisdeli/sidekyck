@@ -1,52 +1,44 @@
-Feature: Account Authentication
+Feature: Account Creating and Authentication
  
   As a user
-  So that I protect and access my information
-  I want to be require user authentication
-
-  #Background:
-  #  Given the following users exist:
-  #  | name       | email            | password  | password_confirmation  | admin |
-  #  | user1      | user1@email.com  | password  | password               | false |
+  So that I have a personalized experience
+  I want to be able to create and authenticate my account through other providers
 
 @omniauth_test
-Scenario: a user can authenticate with facebook
+Scenario: a new user can create their account through facebook
+  Given I am on the homepage
+  And I follow "Login with Facebook"
+  And I am on the profile page for "fbuser"
+  Then I should see "fbuser"
+
+@omniauth_test
+Scenario: a new user can create their account through twitter
+  Given I am on the homepage
+  And I follow "Login with Twitter"
+  And I am on the profile page for "twitteruser"
+  Then I should see "twitteruser"
+
+@omniauth_test
+Scenario: an existing user can authenticate through a provider
+  Given I am signed in with provider "twitter"
+  And I am on the signout page
+  And I am on the homepage
+  And I follow "Login with Twitter"
+  Then I should see "twitteruser"
+  And there should only be one user "twitteruser"
+
+@omniauth_test
+Scenario: A signed in user should see the correct user bar
   Given I am signed in with provider "facebook"
-  And I am on the profile page for "facebookuser"
-  Then I should see "facebookuser"
-
-Scenario: an existing user can log in
-  Given I am on the signin page
-  And I fill in "user[email]" with "user1@email.com"
-  And I fill in "user[password]" with "password"
-  When I press "Sign in"
-  Then I should see "Signed in successfully."
-  And I should see "user1"
-
-Scenario: an existing user will not be logged in given the wrong password
-  Given I am on the signin page
-  And I fill in "user[email]" with "user1@email.com"
-  And I fill in "user[password]" with "wrongpassword"
-  When I press "Sign in"
-  Then I should see "Invalid"
-  And I should not see "user1"
-
-Scenario: Signed in user should see the correct user bar
-  Given I am logged in as "user1" with password "password"
   And I am on the home page
-  And I should not see "Register"
-  When I follow "user1"
-  Then I should be on the profile page for "user1"
-  When I follow "Sign out"
-  Then I should be on the home page
-  And I should see "Sign in"
+  And I should not see "Login with Facebook"
+  And I should not see "Login with Twitter"
+  And I should see "fbuser"
+  And I should see "Settings"
 
+@omniauth_test
 Scenario: Non-signed in user should see the correct user bar
   Given I am on the home page
   Then I should not see "Sign out"
-  When I follow "Sign in"
-  Then I should be on the signin page
-  Given I am on the home page
-  When I follow "Register"
-  Then I should be on the signup page
-
+  And I should see "Login with Facebook"
+  And I should see "Login with Twitter"

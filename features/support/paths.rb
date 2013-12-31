@@ -15,13 +15,11 @@ module NavigationHelpers
 
     when /^the home\s?page$/
       '/'
-    when /^the signup page$/
-      '/users/sign_up'
-    when /^the signin page$/
-      '/users/sign_in'
-    when /^my edit profile page$/
+    when /^the signout page$/
+      '/signout'
+    when /^the edit profile page for "(.*)"$/
       user_id = User.find_by_name($1).id
-      "/users/edit"
+      "/users/#{user_id}/edit"
     when /^the profile page for "(.*)"$/
       user_id = User.find_by_name($1).id
       "/users/#{user_id}"

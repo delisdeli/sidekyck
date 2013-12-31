@@ -1,117 +1,65 @@
-Feature: create and manage accounts
+Feature: Manage account
  
   As a human
-  So that I create and personalize a Boost create
-  I want to be able to create and manage my account
+  So that I make changes to my current account
+  I want to be able to access account management features
 
-  Background:
-    Given the following users exist:
-    | name       | email            | password  | password_confirmation  | admin |
-    | user1      | user1@email.com  | password  | password               | false |
-    | user2      | user2@email.com  | password  | password               | false |
-    | admin      | admin@email.com  | password  | password               | true  |
+@omniauth_test
+Scenario: An existing user should be able to access their settings page
+  Given I am signed in with provider "facebook"
+  And I am on the homepage
+  And I follow "Settings"
+  Then I should be on the edit profile page for "fbuser"
 
-Scenario: a user can be created
-  Given I am on the signup page
-  And I fill in "user[name]" with "somename"
-  And I fill in "user[email]" with "someemail@email.com"
-  And I fill in "user[password]" with "password"
-  And I fill in "user[password_confirmation]" with "password"
-  When I press "Sign Up"
-  And I am on the profile page for "somename"
-  And I should see "somename"
-  And I should not see "password"
+@omniauth_test
+Scenario: An existing user should be able to see their current providers
+  Given I am signed in with provider "facebook"
+  And I am on the edit profile page for "fbuser"
+  Then I should see "facebook" between "Currenly authenticated through:" and "Add"
 
-Scenario: a user will not be created if the email is already taken
-  Given I am on the signup page
-  And I fill in "user[name]" with "somename"
-  And I fill in "user[email]" with "user1@email.com"
-  And I fill in "user[password]" with "password"
-  And I fill in "user[password_confirmation]" with "password"
-  When I press "Sign Up"
-  And I should see "taken"
-  And I should see "Sign in"
+@omniauth_test
+Scenario: An existing user can add another provider to their account
+  Given I am signed in with provider "facebook"
+  And I am on the edit profile page for "fbuser"
+  And I follow "Login with Twitter"
+  Then there should only be one user "fbuser"
+  And user "twitteruser" should not exist
 
-Scenario: a user will not be created if password doesn't match password_confirmation
-  Given I am on the signup page
-  And I fill in "user[name]" with "somename"
-  And I fill in "user[email]" with "someemail@email.com"
-  And I fill in "user[password]" with "password"
-  And I fill in "user[password_confirmation]" with "wrongpassword"
-  When I press "Sign Up"
-  Then I should see "doesn't match"
+@omniauth_test
+Scenario: An existing user won't be able to authenticate with the same provider twice
+  Given I am signed in with provider "facebook"
+  And I am on the edit profile page for "fbuser"
+  Then I should not see "Login with Facebook"
 
-Scenario: a user will not be created if email is not in the correct form
-  Given I am on the signup page
-  And I fill in "user[email]" with "email@berkeleycom"
-  When I press "Sign Up"
-  Then I should see "Email is invalid"
-  And I fill in "user[email]" with "email@berkeleycom"
-  When I press "Sign Up"
-  Then I should see "Email is invalid"
-  And I fill in "user[email]" with "emailberkeleycom"
-  When I press "Sign Up"
-  Then I should see "Email is invalid"
+@omniauth_test
+Scenario: An existing user will not be able to delete forms of authentication if they have just one
+  Given I am signed in with provider "facebook"
+  And I am on the edit profile page for "fbuser"
+  Then I should not see "Delete facebook"
 
-Scenario: an existing user can edit his information by confirming his password
-  Given I am logged in as "user1" with password "password"
-  And I am on the profile page for "user1"
-  And I follow "Edit Information"
-  And I fill in "user[name]" with "changedusername"
-  And I fill in "user[email]" with "changedemail@email.com"
-  And I fill in "user[password]" with "newpassword"
-  And I fill in "user[password_confirmation]" with "newpassword"
-  And I fill in "user[current_password]" with "password"
-  And I press "Update"
-  Then I should see "You updated your account successfully."
-  When I am on the profile page for "changedusername"
-  And I should see "changedusername"
-  And I should see "changedemail@email.com"
+@omniauth_test
+Scenario: An existing user will be able to delete forms of authentication if they have more than one
+  Given I am signed in with provider "facebook"
+  And I am signed in with provider "twitter"
+  And I am on the edit profile page for "fbuser"
+  And I follow "Delete facebook"
+  Then I should not see "facebook" between "Currenly authenticated through:" and "Add"
+  And I should see "Login with Facebook"
 
-Scenario: a user cannot change their information unless their password is confirmed
-  Given I am logged in as "user1" with password "password"
-  And I am on the profile page for "user1"
-  And I follow "Edit Information"
-  And I fill in "user[name]" with "changedusername"
-  And I fill in "user[email]" with "changedemail@email.com"
-  And I fill in "user[password]" with "newpassword"
-  And I fill in "user[password_confirmation]" with "newpassword"
-  And I fill in "user[current_password]" with "wrongpassword"
-  And I press "Update"
-  Then I should see "Current password is invalid"
-  And I should not see "changedusername"
-  And I should see "user1"
+@omniauth_test
+Scenario: A non-admin cannot edit someone else's account
+  Given I am signed in with provider "facebook"
+  And I am on the signout page
+  And I am signed in with provider "twitter"
+  And I am on the edit profile page for "fbuser"
+  Then I should be on the homepage
 
-Scenario: A non-admin cannot delete someone else's account
-  Given I am logged in as "user1" with password "password"
-  And I am on the profile page for "user2"
-  Then I should not see "Delete Account"
-  And I should not see "Cancel My Account"
-
+@omniauth_test
 @javascript
 Scenario: A user can delete their own account
-  Given I am logged in as "user1" with password "password"
-  And I am on the profile page for "user1"
-  When I follow "Edit Information"
-  And I press "Cancel My Account"
+  Given I am signed in with provider "facebook"
+  And I am on the edit profile page for "fbuser"
+  And I follow "Delete Account"
   And I accept the alert
   Then I should be on the home page
-  And user "user1" should not exist
-
-#@javascript
-#Scenario: An admin can delete a user record
-#  Given I am logged in as "admin" with password "password"
-#  And I am on the profile page for "user2"
-#  When I follow "Delete Account"
-#  And I accept the alert
-#  Then I should be on the home page
-#  And user "user2" should not exist
-
-#Scenario: Non-existent user show should give nice error
-#  Given I am on the profile page for id "20"
-#  Then I should see "That user doesn't exist"
-
-#Scenario: Admin user can edit other users without typing their password
-#  Given I am logged in as "admin" with password "password"
-#  And I am on the edit page for user "user1"
-#  Then I should see "Editing user"
+  And user "fbuser" should not exist

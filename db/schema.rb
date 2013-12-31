@@ -59,8 +59,6 @@ ActiveRecord::Schema.define(version: 20131230075252) do
   add_index "providers", ["user_id"], name: "index_providers_on_user_id"
 
   create_table "users", force: true do |t|
-    t.string   "provider"
-    t.string   "uid"
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"

@@ -1,16 +1,14 @@
 %div.user-bar
   %div.logo 
     = link_to "Boost", root_path
-  - if user_signed_in?
+  - if signed_in?
     %div.notification-icon
       = render "shared/notifications"
   %div.right
-    - if user_signed_in?
-      = link_to "#{current_user.name}", current_user
+    - if signed_in?
+      = link_to current_user.name, current_user
       |
-      = link_to 'Sign out', destroy_user_session_path, :method => :delete
-
+      = link_to 'Settings', edit_user_path(current_user)
     - else
-      = link_to 'Sign in', new_user_session_path, :id => "signin"
-      |
-      = link_to 'Register', new_user_registration_path, :id => "register"
+      = link_to "Login with Facebook", "/auth/facebook"
+      = link_to "Login with Twitter", "/auth/twitter"

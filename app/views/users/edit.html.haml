@@ -1,0 +1,22 @@
+Settings for @user.name
+
+%p= link_to 'Sign out', signout_path
+
+%h1 Currenly authenticated through:
+
+- @user.providers.each do |provider|
+  %p
+    = provider.name
+    - if @user.has_multiple_providers?
+      = link_to "Delete #{provider.name}", provider, :method => :delete
+
+%h1 Add the following additional providers to your account:
+*you will be able to login through either in the future
+
+- unless @user.has_provider? "facebook"
+  = link_to "Login with Facebook", "/auth/facebook"
+- unless @user.has_provider? "twitter"
+  = link_to "Login with Twitter", "/auth/twitter"
+
+Delete Account
+= link_to 'Delete Account', @user, :method => :delete, :data => { :confirm => 'Are you sure? All you data will be erased permanently.' }

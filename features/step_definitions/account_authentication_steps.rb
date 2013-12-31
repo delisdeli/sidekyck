@@ -1,11 +1,12 @@
-Given /I am logged in as "(.*)" with password "(.*)"$/ do |name, password|
-  user_email = User.find_by_name(name).email
-  visit path_to("the signin page")
-  fill_in("user[email]", :with => user_email)
-  fill_in("user[password]", :with => password)
-  click_button("Sign in")
+Given /I am logged in as "(.*)"$/ do |name|
+  user = User.find_by_name(name)
+  self.current_user = user
 end
 
 Given /^I am signed in with provider "(.*)"$/ do |provider|
   visit "/auth/#{provider.downcase}"
+end
+
+And /^there should only be one user "(.*)"$/ do |user|
+  User.where(name: user).count == 1
 end

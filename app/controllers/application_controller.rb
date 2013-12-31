@@ -15,6 +15,11 @@ class ApplicationController < ActionController::Base
     !!current_user
   end
 
+  def current_user=(user)
+    @current_user = user
+    session[:user_id] = user.nil? ? user : user.id
+  end
+
   def check_for_notifications
     if params[:show_notifications] == "true"
       @show_notifications = true
@@ -40,6 +45,10 @@ class ApplicationController < ActionController::Base
   def correct_user
     @user = User.find(params[:id])
     redirect_to(root_url) unless current_user?(@user)
+  end
+
+  def current_user? user
+    current_user == user
   end
 
   def admin_user

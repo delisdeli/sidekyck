@@ -22,6 +22,14 @@ class User < ActiveRecord::Base
     self.save!
   end
 
+  def has_provider? provider
+    !!providers.find_by_name(provider)
+  end
+
+  def has_multiple_providers?
+    providers.count > 1
+  end
+
   def is_user? current_user
     self == current_user
   end
