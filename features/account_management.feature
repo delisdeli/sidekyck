@@ -11,11 +11,6 @@ Feature: create and manage accounts
     | user2      | user2@email.com  | password  | password               | false |
     | admin      | admin@email.com  | password  | password               | true  |
 
-Scenario: a user can log into facebook
-  Given I am signed in with provider "facebook"
-  And I am on the profile page for "facebookuser"
-  Then I should see "facebookuser"
-
 Scenario: a user can be created
   Given I am on the signup page
   And I fill in "user[name]" with "somename"

@@ -15,7 +15,7 @@ class User < ActiveRecord::Base
 
   def add_provider(auth)
     provider = self.providers.build(name: auth["provider"], uid: auth["uid"])
-    if provider.name == "facebook"
+    if auth["credentials"]
       provider.oauth_token = auth["credentials"]["token"]
       provider.oauth_expires_at = Time.at(auth["credentials"]["expires_at"])
     end

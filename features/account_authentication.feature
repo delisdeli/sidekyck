@@ -4,10 +4,16 @@ Feature: Account Authentication
   So that I protect and access my information
   I want to be require user authentication
 
-  Background:
-    Given the following users exist:
-    | name       | email            | password  | password_confirmation  | admin |
-    | user1      | user1@email.com  | password  | password               | false |
+  #Background:
+  #  Given the following users exist:
+  #  | name       | email            | password  | password_confirmation  | admin |
+  #  | user1      | user1@email.com  | password  | password               | false |
+
+@omniauth_test
+Scenario: a user can authenticate with facebook
+  Given I am signed in with provider "facebook"
+  And I am on the profile page for "facebookuser"
+  Then I should see "facebookuser"
 
 Scenario: an existing user can log in
   Given I am on the signin page

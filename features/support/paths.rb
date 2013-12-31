@@ -23,8 +23,6 @@ module NavigationHelpers
       user_id = User.find_by_name($1).id
       "/users/edit"
     when /^the profile page for "(.*)"$/
-      p User.all
-      p Provider.all
       user_id = User.find_by_name($1).id
       "/users/#{user_id}"
 
