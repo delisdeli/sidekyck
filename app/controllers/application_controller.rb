@@ -5,6 +5,7 @@ class ApplicationController < ActionController::Base
   # include SessionsHelper
 
   before_filter :check_for_notifications
+  before_filter :check_for_friend_requests
   helper_method :current_user, :signed_in?
 
   def current_user
@@ -17,14 +18,14 @@ class ApplicationController < ActionController::Base
 
   def current_user=(user)
     @current_user = user
-    session[:user_id] = user.nil? ? user : user.id
+    session[:user_id] = user.id
   end
 
   def check_for_notifications
     if params[:show_notifications] == "true"
       @show_notifications = true
       begin
-        @user = User.find_by_id(params[:user_id])
+        @user = User.find(params[:user_id])
       rescue Exception => e
         redirect_to root_url, notice: "That user doesn't exist" unless @user
         return
@@ -32,6 +33,18 @@ class ApplicationController < ActionController::Base
       @unseen_notifications = @user.unseen_notifications
       p @unseen_notifications
       @user.read_notifications
+    end
+  end
+
+  def check_for_friend_requests
+    if params[:show_friend_requests] == "true"
+      @show_friend_requests = true
+      begin
+        @user = User.find(params[:user_id])
+      rescue Exception => e
+        redirect_to root_url, notice: "That user doesn't exist" unless @user
+        return
+      end
     end
   end
 

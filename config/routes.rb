@@ -1,24 +1,16 @@
 Boost::Application.routes.draw do
   
   resources :providers, only: [:destroy]
-  # match '/signup', to: 'users#new', via: [:get, :post]
+  resources :listings
+  resources :users
+  
   match '/auth/:provider/callback', to: 'sessions#create', via: [:get, :post]
   match '/signout', to: 'sessions#destroy', via: [:get, :post]
-  # match '/signin', to: 'sessions#new', via: [:get, :post]
 
   get "friendship/create"
   get "friendship/destroy"
-
-  resources :listings
-  resources :users
-  # resources :sessions, only: [:new, :create, :destroy]
-
-  # match '/signup', to: 'users#new', via: 'get'
-  # match '/signin', to: 'sessions#new', via: 'get'
-  # match '/signout', to: 'sessions#destroy', via: 'delete'
-
+  
   root "listings#index"
-  # root 'sessions#new'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

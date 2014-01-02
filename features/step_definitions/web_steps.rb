@@ -158,8 +158,6 @@ Then /^(?:|I )should see "([^"]*)"$/ do |text|
   end
 end
 
-
-
 Then /^(?:|I )should see \/([^\/]*)\/$/ do |regexp|
   regexp = Regexp.new(regexp)
 
@@ -305,4 +303,8 @@ end
 
 Then /^I should see "([^"]*)" button/ do |name|
   find_button(name).should_not be_nil
+end
+
+When /^I follow image link "([^"]*)"$/ do |img_alt|
+    find(:xpath, "//img[@alt = '#{img_alt}']/parent::a").click()
 end

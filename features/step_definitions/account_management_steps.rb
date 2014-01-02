@@ -13,6 +13,5 @@ Given /the following users exist/ do |users_table|
 end
 
 Then /^user "(.*?)" should not exist$/ do |user|
-  user_id = User.find_by_name(user)
-  user_id == nil
+  !User.find_by_name(user)
 end

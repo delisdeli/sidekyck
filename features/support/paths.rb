@@ -15,6 +15,8 @@ module NavigationHelpers
 
     when /^the home\s?page$/
       '/'
+    when /^the listings page$/
+      '/listings'
     when /^the signout page$/
       '/signout'
     when /^the edit profile page for "(.*)"$/

@@ -30,6 +30,10 @@ class User < ActiveRecord::Base
     providers.count > 1
   end
 
+  def has_friend_requests?
+    !requested_friendships.empty?
+  end
+
   def is_user? current_user
     self == current_user
   end

@@ -1,6 +1,6 @@
 class FriendshipController < ApplicationController
   before_filter :store_referer
-  before_filter :authenticate_user!
+  before_filter :signed_in?
 
   def create
     friend = User.find_by_id(params[:friend_id])
@@ -20,11 +20,7 @@ class FriendshipController < ApplicationController
       end
     end
 
-    if session[:return_to]
-      redirect_to session.delete(:return_to)
-    else
-      redirect_to root_url
-    end
+    redirect_to request.referer
   end
 
   def destroy
@@ -32,12 +28,12 @@ class FriendshipController < ApplicationController
     @friendship = current_user.friendships.find_by_friend_id(friend)
     @complement_friendship = friend.friendships.find_by_friend_id(current_user)
     unless @friendship and @complement_friendship
-      redirect_to root_url, notice: "Cannot delete a friendship that doesn't exist."
+      redirect_to request.referer, notice: "Cannot delete a friendship that doesn't exist."
     else
       flash[:notice] = @friendship.proper_destroy_message
       @friendship.destroy
       @complement_friendship.destroy
-      redirect_to current_user
+      redirect_to request.referer
     end
   end
 end

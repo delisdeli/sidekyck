@@ -1,5 +1,5 @@
 - if @show_notifications
-  = link_to "notifications", params.merge(show_notifications: false)
+  = link_to (image_tag "bell_icon.svg"), params.merge(show_notifications: false)
   %div.notifications
     - @unseen_notifications.each do |notification|
       - if notification.tunnel
@@ -10,4 +10,4 @@
 - else
   - if current_user.has_unseen_notifications?
     = current_user.unseen_notifications_count
-  = link_to "notifications", params.merge(show_notifications: true, user_id: current_user.id)
+  = link_to (image_tag "bell_icon.svg"), params.merge(show_notifications: true, show_friend_requests: true, user_id: current_user.id)

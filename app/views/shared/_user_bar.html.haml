@@ -4,11 +4,14 @@
   - if signed_in?
     %div.notification-icon
       = render "shared/notifications"
+  - if signed_in?
+    %div.friend_requests
+      = render "shared/friend_requests"
   %div.right
     - if signed_in?
       = link_to current_user.name, current_user
       |
-      = link_to 'Settings', edit_user_path(current_user)
+      = link_to (image_tag "settings_icon.svg"), edit_user_path(current_user)
     - else
       = link_to "Login with Facebook", "/auth/facebook"
       = link_to "Login with Twitter", "/auth/twitter"
