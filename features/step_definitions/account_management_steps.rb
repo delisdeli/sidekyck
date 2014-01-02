@@ -15,3 +15,9 @@ end
 Then /^user "(.*?)" should not exist$/ do |user|
   !User.find_by_name(user)
 end
+
+And /^"(.*?)" is an admin user$/ do |user|
+  user = User.find_by_name(user)
+  user.admin = true
+  user.save
+end

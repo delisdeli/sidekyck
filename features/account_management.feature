@@ -63,6 +63,20 @@ Scenario: A user can delete their own account and should be logged out
   And I follow "Delete Account"
   And I accept the alert
   Then I should be on the home page
+  And I should see "Account has been deleted."
   And I should see "Login with Facebook"
   And user "fbuser" should not exist
 
+@javascript
+Scenario: A admin user can delete their other accounts and should not be logged out
+  Given I am signed in with provider "facebook"
+  And I am on the signout page
+  And I am signed in with provider "twitter"
+  And "twitteruser" is an admin user
+  And I am on the edit profile page for "fbuser"
+  And I follow "Delete Account"
+  And I accept the alert
+  Then I should be on the home page
+  And I should see "Account has been deleted."
+  And I should see "twitteruser"
+  And user "fbuser" should not exist
