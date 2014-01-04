@@ -2,13 +2,24 @@ class User < ActiveRecord::Base
 
   has_many :providers, dependent: :destroy
   has_many :notifications,  dependent: :destroy
+  
   has_many :friendships,  dependent: :delete_all
-  has_many :accepted_friendships, -> { where status: 'accepted'}, :class_name => "Friendship"
-  has_many :requested_friendships, -> { where status: 'requested'}, :class_name => "Friendship"
-  has_many :pending_friendships, -> { where status: 'pending'}, :class_name => "Friendship"
-  has_many :friends, :through => :accepted_friendships
-  has_many :requested_friends, :through => :requested_friendships, :source => :friend
-  has_many :pending_friends, :through => :pending_friendships, :source => :friend
+  has_many :accepted_friendships, -> { where status: 'accepted'}, class_name: "Friendship"
+  has_many :requested_friendships, -> { where status: 'requested'}, class_name: "Friendship"
+  has_many :pending_friendships, -> { where status: 'pending'}, class_name: "Friendship"
+  has_many :friends, through: :accepted_friendships
+  has_many :requested_friends, through: :requested_friendships, :source => :friend
+  has_many :pending_friends, through: :pending_friendships, :source => :friend
+  
+  has_many :applications
+  has_many :applicants, through: :applications
+
+  has_many :services
+  has_many :requested_services, -> { where type: 'requested'}, class_name: "Services"
+  has_many :service_providers, through: :requested_services, source: :provider
+  has_many :provided_services, -> { where type: 'provided'}, class_name: "Services"
+  has_many :customers, through: :provided_services
+
 
   before_save :restrict_max_notifications
   before_destroy :destroy_complementary_friendships
