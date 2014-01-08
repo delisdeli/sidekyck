@@ -10,22 +10,28 @@
     = f.label :price
     = f.text_field :price
   .field
-    = f.label :instructions
-    = f.text_area :instructions
-  .field
     = f.label :title
     = f.text_field :title
   .field
+    = f.label :description
+    = f.text_area :description
+  .field
     = f.label :start_time
-    = f.time_select :start_time
+    = f.datetime_select :start_time
   .field
     = f.label :end_time
-    = f.time_select :end_time
+    = f.datetime_select :end_time
   .field
-    = f.label :requirements
-    = f.text_area :requirements
+    Positions available:
+    = f.number_field :positions
   .field
-    = f.label :status
-    = f.text_field :status
+    Are you a customer or service provider?
+    = f.select :category, User.categories
+  .field
+    = f.label :audience
+    = f.select :audience, User.audiences
+
   .actions
-    = f.submit 'Save'
+    = f.submit 'Save Listing'
+
+

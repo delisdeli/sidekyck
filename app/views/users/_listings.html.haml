@@ -1,0 +1,7 @@
+%h1 Active Listings
+- @user.active_listings.each do |listing|
+  = link_to listing.title, listing
+
+- if correct_or_admin_user?
+  - @user.nonactive_listings.each do |listing|
+    = link_to listing.title, listing

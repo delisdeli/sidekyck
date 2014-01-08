@@ -11,9 +11,10 @@ class User < ActiveRecord::Base
   has_many :requested_friends, through: :requested_friendships, :source => :friend
   has_many :pending_friends, through: :pending_friendships, :source => :friend
   
-  has_many :applications
+  has_many :applications, dependent: :destroy
   has_many :applicants, through: :applications
 
+  has_many :listings
   has_many :services
   has_many :requested_services, -> { where type: 'requested'}, class_name: "Services"
   has_many :service_providers, through: :requested_services, source: :provider
@@ -61,6 +62,14 @@ class User < ActiveRecord::Base
     self.unseen_notifications_count != 0
   end
 
+  def active_listings
+    listings.where(status: 'active')
+  end
+
+  def nonactive_listings
+    listings.where.not(status: 'active')
+  end
+
   def restrict_max_notifications
     notifications_count = self.notifications.size
     if notifications_count > 50
@@ -104,6 +113,21 @@ class User < ActiveRecord::Base
     self.save(validate: false)
   end
   
+  def self.audiences
+    ['everyone', 'friends']
+  end
+
+  def self.categories
+    ['customer', 'provider']
+  end
+
+  def friends_friend_listings
+    listings_to_display = []
+    self.friends.each do |friend|
+      listings_to_display += friend.listings.where(status: 'active', audience: 'friends')
+    end
+    listings_to_display
+  end
 
   def destroy_complementary_friendships
     Friendship.destroy_all(friend_id: self.id)

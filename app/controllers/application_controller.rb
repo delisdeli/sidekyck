@@ -6,7 +6,7 @@ class ApplicationController < ActionController::Base
 
   before_filter :check_for_notifications
   before_filter :check_for_friend_requests
-  helper_method :current_user, :signed_in?
+  helper_method :current_user, :signed_in?, :correct_user?, :correct_or_admin_user?, :admin_user?, :current_user?
 
   def current_user
     @current_user ||= User.find_by_id(session[:user_id])
@@ -48,24 +48,34 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def signed_in_user
-    unless signed_in?
-    store_location
-    redirect_to signin_url, notice: "Please sign in."
-    end
-  end
-
   def correct_user?
     @user = User.find(params[:id])
     !!current_user?(@user)
   end
 
-  def correct_user
-    redirect_to(root_url) unless correct_user?
+  def admin_user?
+    signed_in? and current_user.admin?
   end
+
+  def correct_or_admin_user?
+    correct_user? or current_user.admin?
+  end  
 
   def current_user? user
     current_user == user
+  end
+
+# **** BEFORE FILTER METHODS ****
+  
+  def signed_in_user
+    unless signed_in?
+    # store_location
+    redirect_to request.referer, notice: "Please sign in."
+    end
+  end
+
+  def correct_user
+    redirect_to(root_url) unless correct_user?
   end
 
   def admin_user

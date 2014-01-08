@@ -11,7 +11,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131230075252) do
+ActiveRecord::Schema.define(version: 20140107185736) do
+
+  create_table "applications", force: true do |t|
+    t.integer  "listing_id"
+    t.integer  "applicant_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "applications", ["listing_id"], name: "index_applications_on_listing_id"
 
   create_table "friendships", force: true do |t|
     t.integer  "user_id"
@@ -25,15 +34,20 @@ ActiveRecord::Schema.define(version: 20131230075252) do
 
   create_table "listings", force: true do |t|
     t.decimal  "price"
-    t.text     "instructions"
+    t.text     "description"
     t.string   "title"
-    t.time     "start_time"
-    t.time     "end_time"
-    t.text     "requirements"
+    t.datetime "start_time"
+    t.datetime "end_time"
     t.string   "status"
+    t.integer  "positions"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "category"
+    t.integer  "user_id"
+    t.string   "audience"
   end
+
+  add_index "listings", ["user_id"], name: "index_listings_on_user_id"
 
   create_table "notifications", force: true do |t|
     t.text     "body"
@@ -57,6 +71,20 @@ ActiveRecord::Schema.define(version: 20131230075252) do
   end
 
   add_index "providers", ["user_id"], name: "index_providers_on_user_id"
+
+  create_table "services", force: true do |t|
+    t.integer  "listing_id"
+    t.string   "status"
+    t.datetime "start_time"
+    t.datetime "completion_time"
+    t.integer  "customer_id"
+    t.integer  "provider_id"
+    t.text     "notes"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "services", ["listing_id"], name: "index_services_on_listing_id"
 
   create_table "users", force: true do |t|
     t.string   "name"

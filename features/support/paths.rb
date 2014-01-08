@@ -25,6 +25,14 @@ module NavigationHelpers
     when /^the profile page for "(.*)"$/
       user_id = User.find_by_name($1).id
       "/users/#{user_id}"
+    when /^create listing page$/
+      '/listings/new'
+    when /^the show page for listing "(.*)"$/
+      listing_id = Listing.find_by_title($1).id
+      "/listings/#{listing_id}"
+    when /^the edit page for listing "(.*)"$/
+      listing_id = Listing.find_by_title($1).id
+      "/listings/#{listing_id}/edit"
 
     # Add more mappings here.
     # Here is an example that pulls values out of the Regexp:

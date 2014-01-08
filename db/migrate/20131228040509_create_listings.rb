@@ -2,12 +2,12 @@ class CreateListings < ActiveRecord::Migration
   def change
     create_table :listings do |t|
       t.decimal :price
-      t.text :instructions
+      t.text :description
       t.string :title
-      t.time :start_time
-      t.time :end_time
-      t.text :requirements
+      t.datetime :start_time
+      t.datetime :end_time
       t.string :status
+      t.integer :positions
 
       t.timestamps
     end

@@ -1,10 +1,15 @@
 class ListingsController < ApplicationController
   before_filter :set_listing, only: [:show, :edit, :update, :destroy]
-  before_filter :authenticate_user!, except: [:show, :index]
+  before_filter :signed_in_user, except: [:show, :index]
 
   # GET /listings
   def index
-    @listings = Listing.all
+    
+    if signed_in?
+      @listings = Listing.where(status: 'active', audience: 'everyone') + current_user.friends_friend_listings
+    else
+      @listings = Listing.where(status: 'active', audience: 'everyone')
+    end
   end
 
   # GET /listings/1
@@ -22,9 +27,9 @@ class ListingsController < ApplicationController
 
   # POST /listings
   def create
-    @listing = Listing.new(listing_params)
+    @listing = current_user.listings.build(listing_params)
 
-    if @listing.save
+    if current_user.save!
       redirect_to @listing, notice: 'Listing was successfully created.'
     else
       render action: 'new'
@@ -43,7 +48,7 @@ class ListingsController < ApplicationController
   # DELETE /listings/1
   def destroy
     @listing.destroy
-    redirect_to listings_url, notice: 'Listing was successfully destroyed.'
+    redirect_to root_url, notice: 'Listing was successfully destroyed.'
   end
 
   private
@@ -54,6 +59,7 @@ class ListingsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def listing_params
-      params.require(:listing).permit(:price, :instructions, :title, :start_time, :end_time, :requirements, :status)
+      params.require(:listing).permit(:user_id, :price, :instructions, :title, :start_time, :end_time,
+       :requirements, :status, :positions, :audience, :description)
     end
 end

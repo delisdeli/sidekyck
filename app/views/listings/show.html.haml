@@ -1,25 +1,19 @@
+%p#notice= notice
+
+%h1= @listing.title
+%p= @listing.description
 %p
-  %b Price:
-  = @listing.price
+  Positions available: 
+  = @listing.positions
 %p
-  %b Instructions:
-  = @listing.instructions
-%p
-  %b Title:
-  = @listing.title
-%p
-  %b Start time:
+  Start Date: 
   = @listing.start_time
 %p
-  %b End time:
+  End Date: 
   = @listing.end_time
 %p
-  %b Requirements:
-  = @listing.requirements
-%p
-  %b Status:
-  = @listing.status
+  This listing is available for: @listing.audience
 
-= link_to 'Edit', edit_listing_path(@listing)
-\|
-= link_to 'Back', listings_path
+- if admin_user? or current_user? @listing.user
+  = link_to 'Edit Listing', edit_listing_path(@listing)
+  = link_to 'Delete Listing', @listing, :method => :delete, :data => { :confirm => 'Are you sure?' }

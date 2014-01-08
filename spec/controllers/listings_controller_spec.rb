@@ -23,7 +23,7 @@ describe ListingsController do
   # This should return the minimal set of attributes required to create a valid
   # Listing. As you add validations to Listing, be sure to
   # adjust the attributes here as well.
-  let(:valid_attributes) { { "price" => "9.99" } }
+  let(:valid_attributes) { {  } }
 
   # This should return the minimal set of values that should be in the session
   # in order to pass any filters (e.g. authentication) defined in
@@ -85,14 +85,14 @@ describe ListingsController do
       it "assigns a newly created but unsaved listing as @listing" do
         # Trigger the behavior that occurs when invalid params are submitted
         Listing.any_instance.stub(:save).and_return(false)
-        post :create, {:listing => { "price" => "invalid value" }}, valid_session
+        post :create, {:listing => {  }}, valid_session
         assigns(:listing).should be_a_new(Listing)
       end
 
       it "re-renders the 'new' template" do
         # Trigger the behavior that occurs when invalid params are submitted
         Listing.any_instance.stub(:save).and_return(false)
-        post :create, {:listing => { "price" => "invalid value" }}, valid_session
+        post :create, {:listing => {  }}, valid_session
         response.should render_template("new")
       end
     end
@@ -106,8 +106,8 @@ describe ListingsController do
         # specifies that the Listing created on the previous line
         # receives the :update_attributes message with whatever params are
         # submitted in the request.
-        Listing.any_instance.should_receive(:update).with({ "price" => "9.99" })
-        put :update, {:id => listing.to_param, :listing => { "price" => "9.99" }}, valid_session
+        Listing.any_instance.should_receive(:update).with({ "these" => "params" })
+        put :update, {:id => listing.to_param, :listing => { "these" => "params" }}, valid_session
       end
 
       it "assigns the requested listing as @listing" do
@@ -128,7 +128,7 @@ describe ListingsController do
         listing = Listing.create! valid_attributes
         # Trigger the behavior that occurs when invalid params are submitted
         Listing.any_instance.stub(:save).and_return(false)
-        put :update, {:id => listing.to_param, :listing => { "price" => "invalid value" }}, valid_session
+        put :update, {:id => listing.to_param, :listing => {  }}, valid_session
         assigns(:listing).should eq(listing)
       end
 
@@ -136,7 +136,7 @@ describe ListingsController do
         listing = Listing.create! valid_attributes
         # Trigger the behavior that occurs when invalid params are submitted
         Listing.any_instance.stub(:save).and_return(false)
-        put :update, {:id => listing.to_param, :listing => { "price" => "invalid value" }}, valid_session
+        put :update, {:id => listing.to_param, :listing => {  }}, valid_session
         response.should render_template("edit")
       end
     end
