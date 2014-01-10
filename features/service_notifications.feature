@@ -48,13 +48,13 @@ Scenario: When the lister approves one of my jobs, I will be receive a notificat
   And I am on the homepage
   And I follow "Bell icon"
   When I follow "Your job has been approved!"
-  I should see be on the show page for the newest listing
+  Then I should see be on the show page for the newest listing
 
 Scenario: When the lister rejects one of my jobs, I will receive a notification
   Given "twitteruser" is hired for "first listing"
   And "twitteruser" completes listing "first listing"
   And "facebookuser" rejects listing "first listing"
-  Am I am signed in with provider "twitter"
+  And I am signed in with provider "twitter"
   And I am on the homepage
   And I follow "Bell icon"
   And I follow "Your job has been rejected."

@@ -58,7 +58,7 @@ class ApplicationController < ActionController::Base
   end
 
   def correct_or_admin_user?
-    correct_user? or current_user.admin?
+    correct_user? or (current_user and current_user.admin?)
   end  
 
   def current_user? user

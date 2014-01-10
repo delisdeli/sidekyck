@@ -66,13 +66,13 @@ Scenario: A user can delete a friendship request they sent
   And I am on the profile page for "fbuser"
   Then I should see "twitteruser" between "Friends Pending" and "Cancel Request"
   When I follow "Cancel Request"
-  Then I should see "Friend request canceled."
+  Then I should see "You have ended your friendship with twitteruser."
   Then I should not see "twitteruser" after "Friends Pending"
   Given I am on the profile page for "twitteruser"
   Then I should not see "fbuser" after "Friends"
   Given I follow "Add Friend"
   And I follow "Cancel Request"
-  Then I should see "Friend request canceled."
+  Then I should see "You have ended your friendship with twitteruser."
   Given I am on the signout page
   And I am signed in with provider "twitter"
   And I am on the profile page for "twitteruser"
@@ -117,7 +117,7 @@ Scenario: After a user rejects a request, they will both not have a friendship
   And I am on the homepage
   And I follow "Friend request"
   And I follow "Decline"
-  Then I should see "You have declined a friendship."
+  Then I should see "You have ended your friendship with fbuser."
   And I should be on the listings page
   Given I am on the profile page for "twitteruser"
   Then I should not see "fbuser"
