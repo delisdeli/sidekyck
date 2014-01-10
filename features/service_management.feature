@@ -22,7 +22,8 @@ Scenario: Eligible users can apply for a listing
   And I am on the homepage
   And I follow "first listing"
   And I follow "Apply"
-  Then "twitteruser" should be an applicant for listing "first listing"
+  Then I should be on the show page for listing "first listing"
+  Then I should see "twitteruser" after "Applicants"
   And I should see "You have applied for this listing!"
 
 Scenario: Applicants will be able to rescind their application
@@ -31,84 +32,87 @@ Scenario: Applicants will be able to rescind their application
   And I follow "first listing"
   And I follow "Apply"
   And I follow "Rescind Application"
+  Then I should be on the show page for listing "first listing"
+  Then I should see "You have rescinded your application."
   Then "twitteruser" should not be an applicant for listing "first listing"
 
+@javascript
 Scenario: The lister can select who to hire among applicants for a particular listing
   Given "twitteruser" has applied for "first listing"
   Given I am signed in with provider "facebook"
-  And I am on the show page for "first listing"
+  And I am on the show page for listing "first listing"
   And I follow "Hire"
   And I accept the alert
-  Then I should be on the show page for "first listing"
+  Then I should be on the show page for listing "first listing"
   And I should see "twitteruser has been hired for this listing!"
+  And listing "first listing" should have status "inactive"
+  And I should see "twitteruser" after "Currently hired:"
 
-Scenario: A listing's status will be changed from active to pending once positions are filled
+@javascript
+Scenario: A listing's status will be changed from active to inactive once positions are filled
   Given "twitteruser" is hired for "first listing"
-  Then listing "first listing" should have status "pending"
+  Then listing "first listing" should have status "inactive"
 
-Scenario: A listing's status will not be changed from active to pending until positions are filled
+@javascript
+Scenario: A listing's status will not be changed from active to inactive until positions are filled
   Given "twitteruser" is hired for "second listing"
-  Then listing "first listing" should be "active"  
+  Then listing "first listing" should have status "active"  
 
+@javascript
 Scenario: When a user is hired, they will be able to indicate when they complete the job
   Given "twitteruser" is hired for "first listing"
-  And I am signed in with provider "twitteruser"
-  And I am on the show page for "first listing"
+  And I am signed in with provider "twitter"
+  And I am on the show page for listing "first listing"
   And I follow "Job Complete"
   And I accept the alert
-  Then I should be on the show page for "first listing"
+  Then I should be on the show page for listing "first listing"
   And I should see "Job complete! Waiting for customer approval."
 
+@javascript
 Scenario: When a user is hired, they will be able to quit jobs
   Given "twitteruser" is hired for "first listing"
-  And I am signed in with provider "twitteruser"
-  And I am on the show page for "first listing"
+  And I am signed in with provider "twitter"
+  And I am on the show page for listing "first listing"
   And I follow "Quit Job"
   And I accept the alert
-  Then I should be on the show page for "first listing"
+  Then I should be on the show page for listing "first listing"
   And I should see "You have quit. Someone else will be able to fill your position."
+  And listing "first listing" should have status "active"
 
+@javascript
 Scenario: Listers will be able to approve jobs that are marked as completed
   Given "twitteruser" is hired for "first listing"
   And "twitteruser" completes listing "first listing"
   And I am signed in with provider "facebook"
-  And I am on the show page for "first listing"
+  And I am on the show page for listing "first listing"
   And I follow "Approve"
   And I accept the alert
-  Then I should be on the show page for "first listing"
+  Then I should be on the show page for listing "first listing"
   And I should see "Job approved!"
+  And listing "first listing" should have status "inactive"
 
+@javascript
 Scenario: Listers will be able to reactivate rejected jobs to the original hiree
   Given "twitteruser" is hired for "first listing"
   And "twitteruser" completes listing "first listing"
   And I am signed in with provider "facebook"
-  And I am on the show page for "first listing"
+  And I am on the show page for listing "first listing"
   And I follow "Reject"
-  And I fill in "notes" with "submit again"
-  And I follow "Rehire"
-  And I accept the alert
+  And I fill in "service[notes]" with "submit again"
+  And I press "Rehire"
+  Then I should see "Job not approved. twitteruser will be notified."
   Then "twitteruser" should be hired for "first listing"
-  And listing "first listing" should have status "pending"
+  And listing "first listing" should have status "inactive"
 
+@javascript
 Scenario: Listers will be able to reactivate rejected jobs to the original audience
   Given "twitteruser" is hired for "first listing"
   And "twitteruser" completes listing "first listing"
   And I am signed in with provider "facebook"
-  And I am on the show page for "first listing"
+  And I am on the show page for listing "first listing"
   And I follow "Reject"
-  And I fill in "notes" with "you're fired"
-  And I follow "Relist"
-  And I accept the alert
+  And I fill in "service[notes]" with "you're fired"
+  And I press "Relist"
+  Then I should see "Job not approved. This job has been relisted."
   Then "twitteruser" should not be hired for "first listing"
-  And the listing "first listing" should have status "active"
-
-Scenario: Listers will be able to approve a job well done!
-  Given "twitteruser" is hired for "first listing"
-  And "twitteruser" completes listing "first listing"
-  And I am signed in with provider "facebook"
-  And I am on the show page for "first listing"
-  And I follow "Accept"
-  And I accept the alert
-  Then I should be on the show page for "first listing"
-  And I should see "Job approved!"
-  And the listing "first listing" should have status "inactive"
+  And listing "first listing" should have status "active"

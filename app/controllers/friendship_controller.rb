@@ -31,9 +31,10 @@ class FriendshipController < ApplicationController
       redirect_to request.referer, notice: "Cannot delete a friendship that doesn't exist."
     else
       flash[:notice] = @friendship.proper_destroy_message
+      friends_name = friend.name
       @friendship.destroy
       @complement_friendship.destroy
-      redirect_to request.referer
+      redirect_to request.referer, notice: "You have ended your friendship with #{friends_name}."
     end
   end
 end

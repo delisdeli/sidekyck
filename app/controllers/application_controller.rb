@@ -66,6 +66,18 @@ class ApplicationController < ActionController::Base
   end
 
 # **** BEFORE FILTER METHODS ****
+
+  def active_listing
+    listing = Listing.find(params[:listing_id])
+    unless listing.status == 'active'
+      redirect_to root_url, "Cannot create job for inactive listing"
+    end
+  end
+
+  def service_owner
+    service = Service.find(params[:id])
+    service.customer_id == current_user.id or service.provider_id == current_user.id
+  end
   
   def signed_in_user
     unless signed_in?

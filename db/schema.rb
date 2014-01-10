@@ -13,14 +13,14 @@
 
 ActiveRecord::Schema.define(version: 20140107185736) do
 
-  create_table "applications", force: true do |t|
+  create_table "applicants", force: true do |t|
     t.integer  "listing_id"
-    t.integer  "applicant_id"
+    t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  add_index "applications", ["listing_id"], name: "index_applications_on_listing_id"
+  add_index "applicants", ["listing_id"], name: "index_applicants_on_listing_id"
 
   create_table "friendships", force: true do |t|
     t.integer  "user_id"
@@ -75,7 +75,6 @@ ActiveRecord::Schema.define(version: 20140107185736) do
   create_table "services", force: true do |t|
     t.integer  "listing_id"
     t.string   "status"
-    t.datetime "start_time"
     t.datetime "completion_time"
     t.integer  "customer_id"
     t.integer  "provider_id"

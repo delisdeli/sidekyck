@@ -4,7 +4,6 @@ class ListingsController < ApplicationController
 
   # GET /listings
   def index
-    
     if signed_in?
       @listings = Listing.where(status: 'active', audience: 'everyone') + current_user.friends_friend_listings
     else
@@ -14,6 +13,10 @@ class ListingsController < ApplicationController
 
   # GET /listings/1
   def show
+    if params[:reject]
+      @rejected = true
+    end
+    @listing = Listing.find(params[:id])
   end
 
   # GET /listings/new
@@ -60,6 +63,6 @@ class ListingsController < ApplicationController
     # Only allow a trusted parameter "white list" through.
     def listing_params
       params.require(:listing).permit(:user_id, :price, :instructions, :title, :start_time, :end_time,
-       :requirements, :status, :positions, :audience, :description)
+       :requirements, :status, :positions, :audience, :description, :category)
     end
 end

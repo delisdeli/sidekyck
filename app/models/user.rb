@@ -11,15 +11,14 @@ class User < ActiveRecord::Base
   has_many :requested_friends, through: :requested_friendships, :source => :friend
   has_many :pending_friends, through: :pending_friendships, :source => :friend
   
-  has_many :applications, dependent: :destroy
-  has_many :applicants, through: :applications
+  has_many :applicants, dependent: :destroy
 
   has_many :listings
-  has_many :services
-  has_many :requested_services, -> { where type: 'requested'}, class_name: "Services"
-  has_many :service_providers, through: :requested_services, source: :provider
-  has_many :provided_services, -> { where type: 'provided'}, class_name: "Services"
-  has_many :customers, through: :provided_services
+  # has_many :services
+  # has_many :requested_services, -> { where type: 'requested'}, class_name: "Services"
+  # has_many :service_providers, through: :requested_services, source: :provider
+  # has_many :provided_services, -> { where type: 'provided'}, class_name: "Services"
+  # has_many :customers, through: :provided_services
 
 
   before_save :restrict_max_notifications
@@ -29,7 +28,9 @@ class User < ActiveRecord::Base
     provider = self.providers.build(name: auth["provider"], uid: auth["uid"])
     if auth["credentials"]
       provider.oauth_token = auth["credentials"]["token"]
-      provider.oauth_expires_at = Time.at(auth["credentials"]["expires_at"])
+      if auth["credentials"]["expires_at"]
+        provider.oauth_expires_at = Time.at(auth["credentials"]["expires_at"])
+      end
     end
     self.save!
   end
@@ -46,8 +47,8 @@ class User < ActiveRecord::Base
     !requested_friendships.empty?
   end
 
-  def is_user? current_user
-    self == current_user
+  def is_user? user
+    self == user
   end
 
   def unseen_notifications
@@ -112,13 +113,14 @@ class User < ActiveRecord::Base
                               body: "You are now friends with #{user.name}!")
     self.save(validate: false)
   end
-  
-  def self.audiences
-    ['everyone', 'friends']
+
+  def can_apply_for_listing? listing
+    !is_user?(listing.user) and listing.is_active? and (listing.audience == 'everyone' or
+      (is_friends_with? listing.user and listing.audience == 'friends'))
   end
 
-  def self.categories
-    ['customer', 'provider']
+  def applied_to_listing? listing
+    !!listing.applicants.find_by_user_id(self.id)
   end
 
   def friends_friend_listings
@@ -132,4 +134,17 @@ class User < ActiveRecord::Base
   def destroy_complementary_friendships
     Friendship.destroy_all(friend_id: self.id)
   end
+
+  def active_requested_services
+    Service.where(status: 'active', customer_id: self.id)
+  end
+
+  def active_provided_services
+    Serivce.where(status: 'active', provider_id: self.id)
+  end
+
+  def active_serices
+    active_requested_services + active_provided_services
+  end
+
 end

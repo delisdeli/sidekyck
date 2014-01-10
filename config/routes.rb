@@ -1,7 +1,13 @@
 Boost::Application.routes.draw do
   
   resources :providers, only: [:destroy]
-  resources :listings
+  resources :listings do 
+    match '/apply', to: 'applicants#create', via: [:get]
+    match '/unapply', to: 'applicants#destroy', via: [:get]
+    match '/employ', to: 'services#create', via: [:get]
+    # match '/unemploy', to: 'services#destroy', via: [:get]
+    resources :services, only: [:show, :update]
+  end
   resources :users
   
   match '/auth/:provider/callback', to: 'sessions#create', via: [:get, :post]

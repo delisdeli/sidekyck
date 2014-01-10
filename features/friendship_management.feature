@@ -138,7 +138,7 @@ Scenario: After a user deletes a friendship, they will both no longer have a fri
   And I am on the profile page for "twitteruser"
   And I follow "End Friendship"
   Then I should be on the profile page for "twitteruser"
-  Then I should see "You have ended a friendship."
+  Then I should see "You have ended your friendship with twitteruser."
   And I should not see "fbuser" after "Friends"
   Given I am on the profile page for "fbuser"
   Then I should not see "twitteruser"

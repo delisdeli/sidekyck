@@ -26,10 +26,10 @@
     = f.number_field :positions
   .field
     Are you a customer or service provider?
-    = f.select :category, User.categories
+    = f.select :category, Listing.categories
   .field
     = f.label :audience
-    = f.select :audience, User.audiences
+    = f.select :audience, Listing.audiences
 
   .actions
     = f.submit 'Save Listing'

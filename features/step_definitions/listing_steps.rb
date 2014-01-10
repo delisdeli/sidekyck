@@ -43,3 +43,58 @@ end
 Then(/^listing "(.*?)" should not exist$/) do |title|
   !!Listing.find_by_title(title)
 end
+
+Then(/^"(.*?)" should be an applicant for listing "(.*?)"$/) do |name, title|
+  Listing.find_by_title(title).applicants.include? User.find_by_name(name)
+end
+
+Then(/^"(.*?)" should not be an applicant for listing "(.*?)"$/) do |name, title|
+  !Listing.find_by_title(title).applicants.include? User.find_by_name(name)
+end
+
+Given(/^"(.*?)" has applied for "(.*?)"$/) do |user_name, listing_title|
+  listing = Listing.find_by_title(listing_title)
+  user = User.find_by_name(user_name)
+  listing.applicants.build(user_id: user.id)
+  listing.save!
+end
+
+Given(/^"(.*?)" is hired for "(.*?)"$/) do |user_name, listing_title|
+  steps %{
+    Given "#{user_name}" has applied for "#{listing_title}"
+    Given I am signed in with provider "facebook"
+    And I am on the show page for listing "#{listing_title}"
+    And I follow "Hire"
+    And I accept the alert
+    Then I should be on the show page for listing "#{listing_title}"
+    And I should see "#{user_name} has been hired for this listing!"
+    And listing "#{listing_title}" should have status "pending"
+    And I should see "#{user_name}" after "Currently hired:"
+  }
+end
+
+Then(/^listing "(.*?)" should have status "(.*?)"$/) do |listing_title, status|
+  listing = Listing.find_by_title(listing_title)
+  listing.status == status
+end
+
+Given(/^"(.*?)" completes listing "(.*?)"$/) do |user_name, listing_title|
+  steps %{
+    And I am signed in with provider "twitter"
+    And I am on the show page for listing "#{listing_title}"
+    And I follow "Job Complete"
+    And I accept the alert
+    Then I should be on the show page for listing "#{listing_title}"
+    And I should see "Job complete! Waiting for customer approval."
+  }
+end
+
+Then(/^"(.*?)" should be hired for "(.*?)"$/) do |user_name, listing_title|
+  user_id = User.find_by_name(user_name).id
+  !!Listing.find_by_title(listing_title).services.find_by_provider_id(user_id)
+end
+
+Then(/^"(.*?)" should not be hired for "(.*?)"$/) do |user_name, listing_title|
+  user_id = User.find_by_name(user_name).id
+  !Listing.find_by_title(listing_title).services.find_by_provider_id(user_id)
+end
