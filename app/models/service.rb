@@ -16,15 +16,23 @@ class Service < ActiveRecord::Base
     self.status == 'pending'
   end
 
+  def active?
+    self.status == 'active'
+  end
+
+  def complete?
+    self.status == 'complete'
+  end
+
   def approve
-    self.status = 'inactive'
+    self.status = 'complete'
     #pay customer
     self.completion_time = Time.now
     self.save!
   end
 
   def quit
-    self.status = 'inactive'
+    self.status = 'quit'
     self.completion_time = Time.now
     self.notes = ''
     self.save!
@@ -44,7 +52,7 @@ class Service < ActiveRecord::Base
   end
 
   def relist
-    self.status = 'inactive'
+    self.status = 'fired'
     self.completion_time = Time.now
     self.notes = ''
     self.listing.open_position

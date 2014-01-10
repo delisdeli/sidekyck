@@ -18,28 +18,44 @@ Feature: Service notification
       | 1        | second listing  | description  | TODAY       | NEVER     | active  | 2          | customer  | everyone  |
 
 Scenario: When someone applies for my listing I should receive a notification
-  Given "twitteruser" has applied for "first listing"
+  Given I am signed in with provider "twitter"
+  And I am on the homepage
+  And I follow "first listing"
+  And I follow "Apply"
   And I am signed in with provider "facebook"
   And I follow "Bell icon"
-  And I follow "twitteruser has applied for you listing!"
+  And I follow "twitteruser has applied for your listing!"
   Then I should be on the show page for listing "first listing"
   And I should see "twitteruser" after "Applicants"
 
+@javascript
 Scenario: When a user is hired, they will receive a notification
   Given "twitteruser" is hired for "first listing"
   And I am signed in with provider "twitter"
   And I am on the homepage
   And I follow "Bell icon"
   And I follow "You've been hired for a listing!"
-  Then I should be on the show page for the newest listing
+  Then I should be on the show page for listing "first listing"
 
+@javascript
 Scenario: When a user quits one of my jobs, I will receive a notification
   Given "twitteruser" is hired for "first listing"
   And "twitteruser" quits listing "first listing"
   When I am signed in with provider "facebook"
   And I follow "Bell icon"
-  Then I should see "twitteruser has quit."
+  And I follow "twitteruser quit."
+  Then I should be on the show page for listing "first listing"
 
+@javascript
+Scenario: When a user completes one of my jobs, I will receive a notification
+  Given "twitteruser" is hired for "first listing"
+  And "twitteruser" completes listing "first listing"
+  When I am signed in with provider "facebook"
+  And I follow "Bell icon"
+  And I follow "twitteruser has completed a task for you, let them know how they did!"
+  Then I should be on the show page for listing "first listing"
+
+@javascript
 Scenario: When the lister approves one of my jobs, I will be receive a notification
   Given "twitteruser" is hired for "first listing"
   And "twitteruser" completes listing "first listing"
@@ -48,15 +64,26 @@ Scenario: When the lister approves one of my jobs, I will be receive a notificat
   And I am on the homepage
   And I follow "Bell icon"
   When I follow "Your job has been approved!"
-  Then I should see be on the show page for the newest listing
+  Then I should be on the show page for listing "first listing"
 
-Scenario: When the lister rejects one of my jobs, I will receive a notification
+@javascript
+Scenario: When the lister rejects one of my jobs and rehires me, I will receive a notification
   Given "twitteruser" is hired for "first listing"
   And "twitteruser" completes listing "first listing"
-  And "facebookuser" rejects listing "first listing"
+  And "facebookuser" rehires me for listing "first listing"
   And I am signed in with provider "twitter"
   And I am on the homepage
   And I follow "Bell icon"
-  And I follow "Your job has been rejected."
-  Then I should be on the show page for newest listing
-  
+  And I follow "Your job has been rejected, see what still needs to be done."
+  Then I should be on the show page for listing "first listing"
+
+@javascript
+Scenario: When the lister rejects one of my jobs and relists, I will receive a notification
+  Given "twitteruser" is hired for "first listing"
+  And "twitteruser" completes listing "first listing"
+  And "facebookuser" relists listing "first listing"
+  And I am signed in with provider "twitter"
+  And I am on the homepage
+  And I follow "Bell icon"
+  And I follow "Your job has been rejected and relisted."
+  Then I should be on the show page for listing "first listing"

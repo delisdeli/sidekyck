@@ -32,8 +32,13 @@
 %h2 Currently hired:
 - @listing.services.each do |service_object|
   = link_to service_object.associate.name, service_object.associate
+  - if service_object.complete?
+    = "Job completed on #{service_object.completion_time}."
   - if current_user? service_object.associate
-    = link_to 'Job Complete', listing_service_path(@listing, id: service_object, submit: true), method: :put, data: { confirm: 'Are you sure you are finished?' }
+    - if service_object.pending_approval?
+      Approval Pending
+    - elsif service_object.active?
+      = link_to 'Job Complete', listing_service_path(@listing, id: service_object, submit: true), method: :put, data: { confirm: 'Are you sure you are finished?' }
     = link_to 'Quit Job', listing_service_path(@listing, id: service_object, quit: true), method: :put, data: { confirm: 'Are you sure you want to quit?' }
   - if service_object.pending_approval? and current_user? @listing.user
     - if @rejected

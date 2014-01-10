@@ -6,6 +6,7 @@ class ApplicantsController < ApplicationController
     @listing.applicants.build(user_id: current_user.id)
     if current_user.can_apply_for_listing?(@listing) and @listing.save
       flash[:notice] = "You have applied for this listing!"
+      @listing.user.send_notification( tunnel: "/listings/#{@listing.id}", body: "#{current_user.name} has applied for your listing!")
     else
       flash[:notice] = "You could not apply to this listing."
     end

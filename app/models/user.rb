@@ -114,6 +114,13 @@ class User < ActiveRecord::Base
     self.save(validate: false)
   end
 
+  def send_notification args
+    self.notifications.build( seen: false,
+                              tunnel: args[:tunnel],
+                              body: args[:body] )
+    self.save!(validate: false)
+  end
+
   def can_apply_for_listing? listing
     !is_user?(listing.user) and listing.is_active? and (listing.audience == 'everyone' or
       (is_friends_with? listing.user and listing.audience == 'friends'))

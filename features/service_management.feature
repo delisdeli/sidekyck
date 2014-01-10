@@ -35,6 +35,7 @@ Scenario: Applicants will be able to rescind their application
   Then I should be on the show page for listing "first listing"
   Then I should see "You have rescinded your application."
   Then "twitteruser" should not be an applicant for listing "first listing"
+  And I should not see "twitteruser" after "Applicants:"
 
 @javascript
 Scenario: The lister can select who to hire among applicants for a particular listing
@@ -47,6 +48,7 @@ Scenario: The lister can select who to hire among applicants for a particular li
   And I should see "twitteruser has been hired for this listing!"
   And listing "first listing" should have status "inactive"
   And I should see "twitteruser" after "Currently hired:"
+  And I should not see "twitteruser" between "Applicants:" and "Currently hired:"  
 
 @javascript
 Scenario: A listing's status will be changed from active to inactive once positions are filled
@@ -67,12 +69,29 @@ Scenario: When a user is hired, they will be able to indicate when they complete
   And I accept the alert
   Then I should be on the show page for listing "first listing"
   And I should see "Job complete! Waiting for customer approval."
+  And I should not see "Job Complete"
+  And I should see "Quit Job"
+  And I should see "Approval Pending"
 
 @javascript
-Scenario: When a user is hired, they will be able to quit jobs
+Scenario: When a user is hired, they will be able to quit jobs they haven't completed
   Given "twitteruser" is hired for "first listing"
   And I am signed in with provider "twitter"
   And I am on the show page for listing "first listing"
+  And I follow "Quit Job"
+  And I accept the alert
+  Then I should be on the show page for listing "first listing"
+  And I should see "You have quit. Someone else will be able to fill your position."
+  And listing "first listing" should have status "active"
+
+@javascript
+Scenario: When a user is hired, they will be able to quit jobs they have completed
+  Given "twitteruser" is hired for "first listing"
+  And I am signed in with provider "twitter"
+  And I am on the show page for listing "first listing"
+  And I follow "Job Complete"
+  And I accept the alert
+  Then I should see "Approval Pending"
   And I follow "Quit Job"
   And I accept the alert
   Then I should be on the show page for listing "first listing"
@@ -90,6 +109,7 @@ Scenario: Listers will be able to approve jobs that are marked as completed
   Then I should be on the show page for listing "first listing"
   And I should see "Job approved!"
   And listing "first listing" should have status "inactive"
+  And I should see "Job completed on" after "twitteruser"
 
 @javascript
 Scenario: Listers will be able to reactivate rejected jobs to the original hiree

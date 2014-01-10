@@ -91,10 +91,47 @@ end
 
 Then(/^"(.*?)" should be hired for "(.*?)"$/) do |user_name, listing_title|
   user_id = User.find_by_name(user_name).id
-  !!Listing.find_by_title(listing_title).services.find_by_provider_id(user_id)
+  listing = Listing.find_by_title(listing_title).services.find_by_provider_id(user_id)
+  !!listing and listing.active?
 end
 
 Then(/^"(.*?)" should not be hired for "(.*?)"$/) do |user_name, listing_title|
   user_id = User.find_by_name(user_name).id
   !Listing.find_by_title(listing_title).services.find_by_provider_id(user_id)
+end
+
+Given(/^"(.*?)" quits listing "(.*?)"$/) do |arg1, listing_title|
+  steps %{
+    And I am signed in with provider "twitter"
+    And I am on the show page for listing "#{listing_title}"
+    And I follow "Quit Job"
+    And I accept the alert
+  }
+end
+
+Given(/^"(.*?)" approves listing "(.*?)"$/) do |arg1, arg2|
+  steps %{
+    And I am signed in with provider "facebook"
+    And I am on the show page for listing "first listing"
+    And I follow "Approve"
+    And I accept the alert
+  }
+end
+
+Given(/^"(.*?)" rehires me for listing "(.*?)"$/) do |arg1, arg2|
+  steps %{
+    And I am signed in with provider "facebook"
+    And I am on the show page for listing "first listing"
+    And I follow "Reject"
+    And I press "Rehire"
+  }
+end
+
+Given(/^"(.*?)" relists listing "(.*?)"$/) do |arg1, arg2|
+  steps %{
+    And I am signed in with provider "facebook"
+    And I am on the show page for listing "first listing"
+    And I follow "Reject"
+    And I press "Relist"
+  }
 end
