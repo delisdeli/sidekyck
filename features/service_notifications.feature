@@ -53,6 +53,7 @@ Scenario: When a user completes one of my jobs, I will receive a notification
   When I am signed in with provider "facebook"
   And I follow "Bell icon"
   And I follow "twitteruser has completed a task for you, let them know how they did!"
+  Then I should see "twitteruser"
   Then I should be on the show page for listing "first listing"
 
 @javascript
@@ -64,6 +65,7 @@ Scenario: When the lister approves one of my jobs, I will be receive a notificat
   And I am on the homepage
   And I follow "Bell icon"
   When I follow "Your job has been approved!"
+  Then I should see "twitteruser"
   Then I should be on the show page for listing "first listing"
 
 @javascript
@@ -86,4 +88,5 @@ Scenario: When the lister rejects one of my jobs and relists, I will receive a n
   And I am on the homepage
   And I follow "Bell icon"
   And I follow "Your job has been rejected and relisted."
+  Then I should see "twitteruser"
   Then I should be on the show page for listing "first listing"
