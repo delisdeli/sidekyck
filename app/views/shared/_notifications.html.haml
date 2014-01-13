@@ -10,4 +10,4 @@
 - else
   - if current_user.has_unseen_notifications?
     = current_user.unseen_notifications_count
-  = link_to (image_tag "bell_icon.svg"), params.merge(show_notifications: true, show_friend_requests: true, user_id: current_user.id)
+  = link_to (image_tag "bell_icon.svg"), params.merge(show_notifications: true, show_friend_requests: false, user_id: current_user.id)

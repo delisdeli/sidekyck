@@ -1,0 +1,97 @@
+@import "twitter/bootstrap/bootstrap";
+body { padding-top: 60px; }
+@import "twitter/bootstrap/responsive";
+
+// Set the correct sprite paths
+@iconSpritePath: image-url("twitter/bootstrap/glyphicons-halflings.png");
+@iconWhiteSpritePath: image-url("twitter/bootstrap/glyphicons-halflings-white.png");
+
+// Set the Font Awesome (Font Awesome is default. You can disable by commenting below lines)
+@fontAwesomeEotPath: asset-url("fontawesome-webfont.eot");
+@fontAwesomeEotPath_iefix: asset-url("fontawesome-webfont.eot?#iefix");
+@fontAwesomeWoffPath: asset-url("fontawesome-webfont.woff");
+@fontAwesomeTtfPath: asset-url("fontawesome-webfont.ttf");
+@fontAwesomeSvgPath: asset-url("fontawesome-webfont.svg#fontawesomeregular");
+
+// Font Awesome
+@import "fontawesome/font-awesome";
+
+// Glyphicons
+//@import "twitter/bootstrap/sprites.less";
+
+// Your custom LESS stylesheets goes here
+//
+// Since bootstrap was imported above you have access to its mixins which
+// you may use and inherit here
+//
+// If you'd like to override bootstrap's own variables, you can do so here as well
+// See http://twitter.github.com/bootstrap/customize.html#variables for their names and documentation
+//
+// Example:
+// @linkColor: #ff0000;
+@greenPastel: #9DD19C;
+@bluePastel: #89D3DB;
+@salmonPastel: #E89C7B;
+@purplePastel: #B497C6;
+@lightTan: #EEECDF;
+
+body {
+  font-family: 'Maven Pro', sans-serif;
+  font-weight: 400; 
+}
+
+.brand {
+  text-shadow: none;
+}
+
+.logo {
+  padding: 5px;
+  float: left;
+}
+
+.navbar-inner {
+  background-color: @greenPastel; /* background color will be black for all browsers */
+  background-image: none;
+  background-repeat: no-repeat;
+  filter: none;
+}
+
+.navbar .brand {
+  color: white;
+}
+
+.navbar .nav > li > a {
+  color: white;
+  text-shadow: none;
+}
+
+.navbar .nav > li.icon > a {
+  padding: 5px;
+}
+
+.navbar .nav > li > a:focus,
+.navbar .nav > li > a:hover {
+  color: white;
+}
+
+.navbar .nav > .active > a,
+.navbar .nav > .active > a:hover,
+.navbar .nav > .active > a:focus {
+  color: white;
+}
+
+.btn-facebook,
+.btn-twitter {
+  a {
+    color: white;
+  }
+
+  a:hover,
+  a:focus {
+    text-decoration: none;
+  }
+}
+
+.navbar .nav > li > a {
+color: white;
+}

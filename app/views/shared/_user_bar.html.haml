@@ -1,17 +1,22 @@
-%div.user-bar
-  %div.logo 
-    = link_to "Boost", root_path
-  - if signed_in?
-    %div.notification-icon
-      = render "shared/notifications"
-  - if signed_in?
-    %div.friend_requests
-      = render "shared/friend_requests"
-  %div.right
-    - if signed_in?
-      = link_to current_user.name, current_user
-      |
-      = link_to (image_tag "settings_icon.svg"), edit_user_path(current_user)
-    - else
-      = link_to "Login with Facebook", "/auth/facebook"
-      = link_to "Login with Twitter", "/auth/twitter"
+.navbar.navbar-fixed-top
+  .navbar-inner
+    .container
+      = link_to (image_tag "sidekyck_logo.svg"), root_path, class: 'logo'
+      = link_to "Sidekyck", root_path, class: 'brand'
+      %ul{ :class => "nav pull-right" }
+        - if signed_in?
+          %li= link_to current_user.name, current_user
+          %li{ :class => 'icon' }
+            = render "shared/notifications"
+          %li{ :class => 'icon' }
+            = render "shared/friend_requests"
+          %li{ :class => 'divider-vertical' }
+          %li{ :class => 'icon' }
+            = link_to (image_tag "settings_icon.svg"), edit_user_path(current_user)
+        - else
+          %button{ :class => "btn btn-facebook"}
+            %i{ :class => "fa fa-facebook" }
+            = link_to "| Login with Facebook", "/auth/facebook"
+          %button{ :class => "btn btn-twitter"}
+            %i{ :class => "fa fa-twitter" }
+            = link_to "| Login with Twitter", "/auth/twitter"

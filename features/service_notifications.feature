@@ -25,7 +25,8 @@ Scenario: When someone applies for my listing I should receive a notification
   And I am signed in with provider "facebook"
   And I follow "Bell icon"
   And I follow "twitteruser has applied for your listing!"
-  Then I should be on the show page for listing "first listing"
+  Then I should see "twitteruser"
+  And I should be on the show page for listing "first listing"
   And I should see "twitteruser" after "Applicants"
 
 @javascript
@@ -35,7 +36,8 @@ Scenario: When a user is hired, they will receive a notification
   And I am on the homepage
   And I follow "Bell icon"
   And I follow "You've been hired for a listing!"
-  Then I should be on the show page for listing "first listing"
+  Then I should see "twitteruser"
+  And I should be on the show page for listing "first listing"
 
 @javascript
 Scenario: When a user quits one of my jobs, I will receive a notification
@@ -44,7 +46,8 @@ Scenario: When a user quits one of my jobs, I will receive a notification
   When I am signed in with provider "facebook"
   And I follow "Bell icon"
   And I follow "twitteruser quit."
-  Then I should be on the show page for listing "first listing"
+  Then I should see "twitteruser"
+  And I should be on the show page for listing "first listing"
 
 @javascript
 Scenario: When a user completes one of my jobs, I will receive a notification
@@ -54,7 +57,7 @@ Scenario: When a user completes one of my jobs, I will receive a notification
   And I follow "Bell icon"
   And I follow "twitteruser has completed a task for you, let them know how they did!"
   Then I should see "twitteruser"
-  Then I should be on the show page for listing "first listing"
+  And I should be on the show page for listing "first listing"
 
 @javascript
 Scenario: When the lister approves one of my jobs, I will be receive a notification
@@ -66,7 +69,7 @@ Scenario: When the lister approves one of my jobs, I will be receive a notificat
   And I follow "Bell icon"
   When I follow "Your job has been approved!"
   Then I should see "twitteruser"
-  Then I should be on the show page for listing "first listing"
+  And I should be on the show page for listing "first listing"
 
 @javascript
 Scenario: When the lister rejects one of my jobs and rehires me, I will receive a notification
@@ -77,7 +80,8 @@ Scenario: When the lister rejects one of my jobs and rehires me, I will receive 
   And I am on the homepage
   And I follow "Bell icon"
   And I follow "Your job has been rejected, see what still needs to be done."
-  Then I should be on the show page for listing "first listing"
+  Then I should see "twitteruser"
+  And I should be on the show page for listing "first listing"
 
 @javascript
 Scenario: When the lister rejects one of my jobs and relists, I will receive a notification
@@ -89,4 +93,4 @@ Scenario: When the lister rejects one of my jobs and relists, I will receive a n
   And I follow "Bell icon"
   And I follow "Your job has been rejected and relisted."
   Then I should see "twitteruser"
-  Then I should be on the show page for listing "first listing"
+  And I should be on the show page for listing "first listing"

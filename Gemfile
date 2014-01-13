@@ -1,14 +1,5 @@
 source 'https://rubygems.org'
 
-gem 'rails', '4.0.2'
-gem 'jquery-rails'
-gem 'turbolinks'
-gem 'omniauth-twitter'
-gem 'omniauth-facebook'
-gem 'omniauth-identity'
-gem 'bcrypt-ruby', '~> 3.1.2'
-gem 'haml'
-
 group :development, :test do
   # Use sqlite3 as the database for Active Record
   gem 'sqlite3'
@@ -36,3 +27,15 @@ group :assets do
   gem 'coffee-rails', '~> 4.0.0'
   gem 'uglifier', '>= 1.3.0'
 end
+
+gem 'rails', '4.0.2'
+gem 'jquery-rails'
+gem 'turbolinks'
+gem 'omniauth-twitter'
+gem 'omniauth-facebook'
+gem 'omniauth-identity'
+gem 'bcrypt-ruby', '~> 3.1.2'
+gem 'haml'
+gem "therubyracer"
+gem "less-rails"
+gem "twitter-bootstrap-rails"
