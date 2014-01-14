@@ -18,3 +18,11 @@ end
 And /^no notification should have user id "(.*)"$/ do |user_id|
   assert Notification.where(user_id: user_id).empty?
 end
+
+Given /^notification "(.*)" should be seen$/ do |notification_id|
+  Notification.find(notification_id).seen?
+end
+
+Given /^notification "(.*)" should not be seen$/ do |notification_id|
+  !Notification.find(notification_id).seen?
+end

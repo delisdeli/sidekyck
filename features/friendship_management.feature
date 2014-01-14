@@ -102,7 +102,7 @@ Scenario: After a user accepts a request, they will both have complementary 'acc
   And I should see "Decline"
   When I follow "Accept"
   Then I should see "You are now friends!"
-  And I should be on the listings page
+  And I should be on the homepage
   Given I am on the profile page for "twitteruser"
   Then I should see "fbuser" after "Friends"
   Given I am on the profile page for "fbuser"
@@ -118,7 +118,7 @@ Scenario: After a user rejects a request, they will both not have a friendship
   And I follow "Friend request"
   And I follow "Decline"
   Then I should see "You have ended your friendship with fbuser."
-  And I should be on the listings page
+  And I should be on the homepage
   Given I am on the profile page for "twitteruser"
   Then I should not see "fbuser"
   Given I am on the profile page for "fbuser"

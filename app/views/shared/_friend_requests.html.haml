@@ -1,13 +1,12 @@
-- if @show_friend_requests
-  = link_to (image_tag "friend_request.svg"), params.merge(show_friend_requests: false)
-  %div
-    - @user.requested_friends.each do |requested_friend|
-      %p
-        = link_to requested_friend.name, requested_friend
-        = link_to "Accept", friendship_create_path(accept_request: true, friend_id: requested_friend)
-        = link_to "Decline", friendship_destroy_path(friend_id: requested_friend)
-    %p= link_to "View all friendship requests", current_user
-- else
-  - if current_user.has_friend_requests?
-    = current_user.requested_friendships.count
-  = link_to (image_tag "friend_request.svg"), params.merge(show_friend_requests: true, show_notifications: false,user_id: current_user.id)
+= link_to (image_tag "friend_request.svg"), "#", :class => "dropdown-toggle", :data => {:toggle => "dropdown"}
+- if current_user.has_friend_requests?
+  %span{ :class => "badge" }
+    current_user.friend_request_count
+%ul{ :class => 'dropdown-menu' }
+  - current_user.requested_friends.each do |requested_friend|
+    %li
+      = link_to requested_friend.name, requested_friend
+      = link_to "Accept", friendship_create_path(accept_request: true, friend_id: requested_friend)
+      = link_to "Decline", friendship_destroy_path(friend_id: requested_friend)
+    %li{ :class => "divider" }
+  %li= link_to "View all friendship requests", current_user

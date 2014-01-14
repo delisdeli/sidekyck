@@ -12,7 +12,8 @@ class UsersController < ApplicationController
 
   def destroy
     @user.destroy
-    redirect_to root_url, notice: "Account has been deleted."
+    flash[:green] = "Account has been deleted."
+    redirect_to root_url
   end
 
   private

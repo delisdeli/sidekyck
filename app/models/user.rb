@@ -44,11 +44,19 @@ class User < ActiveRecord::Base
   end
 
   def has_friend_requests?
-    !requested_friendships.empty?
+    Friendship.exists?(status: 'requested', user_id: self.id)
+  end
+
+  def friend_request_count
+    self.requested_friendships.count
   end
 
   def is_user? user
     self == user
+  end
+
+  def latest_7_notifications
+    self.notifications.order(created_at: :desc).take(7)
   end
 
   def unseen_notifications
@@ -56,11 +64,11 @@ class User < ActiveRecord::Base
   end
 
   def unseen_notifications_count
-    self.unseen_notifications.size
+    self.unseen_notifications.count
   end
 
   def has_unseen_notifications?
-    self.unseen_notifications_count != 0
+    Notification.exists?(user_id: self.id, seen: false)
   end
 
   def active_listings
@@ -82,6 +90,10 @@ class User < ActiveRecord::Base
 
   def read_notifications
     self.notifications.where(seen: false).each{ |notif| notif.update_attributes(seen: true) }
+  end
+
+  def read_notification notification_id
+    self.notifications.find(notification_id).update_attributes(seen: true)
   end
 
   def has_friendship_with? friend

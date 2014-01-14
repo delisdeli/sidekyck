@@ -4,9 +4,33 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   # include SessionsHelper
 
-  before_filter :check_for_notifications
-  before_filter :check_for_friend_requests
-  helper_method :current_user, :signed_in?, :correct_user?, :correct_or_admin_user?, :admin_user?, :current_user?
+  before_action :read_notifications
+  helper_method :current_user, :signed_in?, :correct_user?, :correct_or_admin_user?, :admin_user?, :current_user?, :last_page, :current_page
+
+  def read_notifications
+    if params[:read_notification] == "all"
+      current_user.read_notifications
+    elsif params[:read_notification]
+      notification_id = params[:read_notification].to_i
+      if current_user.notifications.find_by_id(notification_id)
+        current_user.read_notification(notification_id)
+      end
+    end
+  end
+
+  def last_page
+    if request.referer
+      return request.referer
+    end
+    return root_url
+  end
+
+  def current_page
+    if request.env['PATH_INFO']
+      return request.env['PATH_INFO']
+    end
+    return root_url
+  end
 
   def current_user
     @current_user ||= User.find_by_id(session[:user_id])
@@ -19,33 +43,6 @@ class ApplicationController < ActionController::Base
   def current_user=(user)
     @current_user = user
     session[:user_id] = user.id
-  end
-
-  def check_for_notifications
-    if params[:show_notifications] == "true"
-      @show_notifications = true
-      begin
-        @user = User.find(params[:user_id])
-      rescue Exception => e
-        redirect_to root_url, notice: "That user doesn't exist" unless @user
-        return
-      end
-      @unseen_notifications = @user.unseen_notifications
-      p @unseen_notifications
-      @user.read_notifications
-    end
-  end
-
-  def check_for_friend_requests
-    if params[:show_friend_requests] == "true"
-      @show_friend_requests = true
-      begin
-        @user = User.find(params[:user_id])
-      rescue Exception => e
-        redirect_to root_url, notice: "That user doesn't exist" unless @user
-        return
-      end
-    end
   end
 
   def correct_user?
@@ -81,9 +78,11 @@ class ApplicationController < ActionController::Base
   
   def signed_in_user
     unless signed_in?
-    # store_location
-    redirect_to request.referer, notice: "Please sign in."
+      # store_location
+      flash[:red] = "Please sign in."
+      redirect_to last_page
     end
+
   end
 
   def correct_user
@@ -92,8 +91,8 @@ class ApplicationController < ActionController::Base
 
   def admin_user
     unless current_user and current_user.admin?
-    flash[:notice] = "Must be admin user to access this feature."
-    redirect_to(root_url)
+      flash[:red] = "Must be admin user to access this feature."
+      redirect_to(root_url)
     end
   end
 
@@ -101,10 +100,10 @@ class ApplicationController < ActionController::Base
     begin 
       @user = User.find(params[:id])
     rescue Exception => e
-      redirect_to root_url, notice: "You are not authorized to access this function."
+      redirect_to root_url, red: "You are not authorized to access this function."
     end
     unless current_user?(@user) or (current_user and current_user.admin?)
-      flash[:notice] = "You are not authorized to access this function."
+      flash[:red] = "You are not authorized to access this function."
       redirect_to(root_url)
     end
   end

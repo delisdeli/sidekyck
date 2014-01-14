@@ -4,7 +4,8 @@
 
 = render 'profile_friendship'
 = render 'listings'
-= render 'notification_list'
+.notifications
+  = render 'notification_list'
 = render 'friend_list'
 
 - if @user.is_user? current_user

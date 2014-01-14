@@ -12,10 +12,6 @@ Feature: Notifications
     | user_id  | body                        | seen  | tunnel  |
     | 1        | contents of notification    | false | /       |
 
-Scenario: a user should not see their notifications until they check them
-  Given I am on the homepage
-  Then I should not see "contents of notification"
-
 Scenario: a user can see how many unread notifications they have on their user bar
   Given I am on the homepage
   Then I should see "1"
@@ -23,27 +19,52 @@ Scenario: a user can see how many unread notifications they have on their user b
   And I am on the homepage
   Then I should see "46"
 
-Scenario: notification counter will dissapear when notifications are read
+Scenario: a user's 7 most recent notifications will be displayed by the user bar
+  Given I create "6" new notifications for "fbuser"
+  And I am on the homepage
+  Then I should see "contents of notification"
+  Given I create "1" new notifications for "fbuser"
+  And I am on the homepage
+  Then I should not see "contents of notification"
+
+Scenario: notification counter will disappear when all notifications are read
   Given I am on the homepage
   Then I should see "1"
-  When I follow "Bell icon"
+  When I follow "contents of notification"
   Then I should not see "1"
-  When I follow "Bell icon"
-  Then I should not see "1"
+  And I should not see "0"
+
+Scenario: a notification will be marked as seen when it is clicked on in the user bar
+  Given I am on the homepage
+  Then notification "1" should not be seen
+  Given I follow "Bell icon"
+  Then notification "1" should not be seen
+  Given I follow "contents of notification"
+  Then notification "1" should be seen
+
+Scenario: a notification will be marked as seen when it is clicked on in the view notifications page
+  Given I am on the view page for notifications
+  Then notification "1" should not be seen
+  Given I follow "contents of notification" inside the "notifications" element
+  Then notification "1" should be seen
 
 Scenario: a user can read all their unseen notifications through their user bar
   Given I am on the homepage
-  And I follow "Bell icon"
-  Then I should see "contents of notification" before "View all notifications"
-  When I follow "Bell icon"
-  And I follow "Bell icon"
-  Then I should not see "conents of notification"
+  And I follow "Mark all notifications as read"
+  Then I should be on the homepage
+  And notification "1" should be seen
 
+Scenario: a user can read all their unseen notifications through view notifications page
+  Given I am on the view page for notifications
+  Then notification "1" should not be seen
+  When I follow "Mark all notifications as read" inside the "notifications" element
+  Then I should be on the view page for notifications
+  And notification "1" should be seen
+  
 Scenario: a user can see all their past notifications
   Given I am on the homepage
-  When I follow "Bell icon"
   And I follow "View all notifications"
-  Then I should see "contents of notification"
+  Then I should be on the view page for notifications
 
 Scenario: a user will only have their most recent 50 notifications saved
   Given I create "50" new notifications for "fbuser"

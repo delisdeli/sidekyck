@@ -33,6 +33,8 @@ module NavigationHelpers
     when /^the edit page for listing "(.*)"$/
       listing_id = Listing.find_by_title($1).id
       "/listings/#{listing_id}/edit"
+    when /^the view page for notifications$/
+      "/users/1"
 
     # Add more mappings here.
     # Here is an example that pulls values out of the Regexp:

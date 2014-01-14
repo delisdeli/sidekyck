@@ -13,14 +13,14 @@ class ServicesController < ApplicationController
       @listing.services.build( customer_id: applicant.id, provider_id: @listing.user.id, status: 'active' )
     end
     if @listing.save
-      message = "#{applicant.name} has been hired for this listing!"
+      flash[:green] = "#{applicant.name} has been hired for this listing!"
       @listing.fill_position
       applicant.send_notification( tunnel: "/listings/#{@listing.id}", body: "You've been hired for a listing!")
     else
-      message = "Failed to hire #{applicant.name} for this listing."
+      flash[:red] = "Failed to hire #{applicant.name} for this listing."
     end
 
-    redirect_to request.referer, notice: message
+    redirect_to last_page
   end
 
   def show
@@ -34,34 +34,42 @@ class ServicesController < ApplicationController
       if params[:quit]
         service.quit
         service.customer.send_notification( tunnel: "/listings/#{listing.id}", body: "#{current_user.name} quit.")
-        redirect_to request.referer, notice: "You have quit. Someone else will be able to fill your position."
+        flash[:blue] = "You have quit. Someone else will be able to fill your position."
+        redirect_to last_page
       elsif params[:submit]
         service.submit_for_approval
-        redirect_to request.referer, notice: "Job complete! Waiting for customer approval."
         service.customer.send_notification( tunnel: "/listings/#{listing.id}", body: "#{current_user.name} has completed a task for you, let them know how they did!")
+        flash[:green] = "Job complete! Waiting for customer approval."
+        redirect_to last_page
       else
-        redirect_to request.referer, notice: "Could not update the status of this service."
+        flash[:red] = "Could not update the status of this service."
+        redirect_to last_page
       end
     elsif current_user? service.customer
       service = Service.find_by_customer_id_and_listing_id( current_user.id , params[:listing_id] )
       listing = service.listing
       if params[:approve]
         service.approve
-        redirect_to request.referer, notice: "Job approved!"
         service.provider.send_notification( tunnel: "/listings/#{listing.id}", body: "Your job has been approved!")
+        flash[:green] = "Job approved!"
+        redirect_to last_page
       elsif params[:commit] == 'Rehire'
         service.rehire(params[:notes])
-        redirect_to request.referer, notice: "Job not approved. #{service.associate.name} will be notified."
+        flash[:blue] = "Job not approved. #{service.associate.name} will be notified."
         service.provider.send_notification( tunnel: "/listings/#{listing.id}", body: "Your job has been rejected, see what still needs to be done.")
+        redirect_to last_page
       elsif params[:commit] == 'Relist'
         service.relist
-        redirect_to request.referer, notice: "Job not approved. This job has been relisted."
+        flash[:blue] = "Job not approved. This job has been relisted."
         service.provider.send_notification( tunnel: "/listings/#{listing.id}", body: "Your job has been rejected and relisted.")
+        redirect_to last_page
       else
-        redirect_to request.referer, notice: "Could not update the status of this service."
+        flash[:red] = "Could not update the status of this service."
+        redirect_to last_page
       end
     else
-      redirect_to request.referer, notice: "Could not update the status of this service."
+      flash[:red] = "Could not update the status of this service."
+      redirect_to last_page
     end
   end
 

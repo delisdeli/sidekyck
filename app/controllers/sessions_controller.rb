@@ -16,16 +16,19 @@ class SessionsController < ApplicationController
       end
     end
     session[:user_id] = user.id
-    redirect_to root_url, :notice => "Signed in!"
+    flash[:green] = "Signed in!"
+    redirect_to root_url
   end
 
   def destroy
     session[:user_id] = nil
-    redirect_to root_url, :notice => "Signed out!"
+    flash[:green] = "Signed out!"
+    redirect_to root_url
   end
 
-  def failure  
-    redirect_to root_path, alert: "Authentication failed, please try again."  
+  def failure
+    flash[:red] = "Authentication failed, please try again."
+    redirect_to root_path
   end
 
 end

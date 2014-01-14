@@ -31,9 +31,9 @@ class ListingsController < ApplicationController
   # POST /listings
   def create
     @listing = current_user.listings.build(listing_params)
-
     if current_user.save!
-      redirect_to @listing, notice: 'Listing was successfully created.'
+      flash[:green] = 'Listing was successfully created.'
+      redirect_to @listing
     else
       render action: 'new'
     end
@@ -42,7 +42,8 @@ class ListingsController < ApplicationController
   # PATCH/PUT /listings/1
   def update
     if @listing.update(listing_params)
-      redirect_to @listing, notice: 'Listing was successfully updated.'
+      flash[:green] = 'Listing was successfully updated.'
+      redirect_to @listing
     else
       render action: 'edit'
     end
@@ -51,7 +52,8 @@ class ListingsController < ApplicationController
   # DELETE /listings/1
   def destroy
     @listing.destroy
-    redirect_to root_url, notice: 'Listing was successfully destroyed.'
+    flash[:green] = 'Listing was successfully destroyed.'
+    redirect_to root_url
   end
 
   private

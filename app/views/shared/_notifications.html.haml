@@ -1,13 +1,13 @@
-- if @show_notifications
-  = link_to (image_tag "bell_icon.svg"), params.merge(show_notifications: false)
-  %div.notifications
-    - @unseen_notifications.each do |notification|
-      - if notification.tunnel
-        %p= link_to notification.body, notification.tunnel
-      - else
-        %p= notification.body
-    %p= link_to "View all notifications", current_user
-- else
+= link_to "#", :class => "dropdown-toggle", :data => {:toggle => "dropdown"} do
+  = image_tag "bell_icon.svg"
   - if current_user.has_unseen_notifications?
-    = current_user.unseen_notifications_count
-  = link_to (image_tag "bell_icon.svg"), params.merge(show_notifications: true, show_friend_requests: false, user_id: current_user.id)
+    %span{ :class => "badge" }
+      = current_user.unseen_notifications_count
+%ul{ :class => 'dropdown-menu' }
+  %li= link_to "Mark all notifications as read", "#{current_page}?read_notification=all"
+  %li{ :class => "divider" }
+  - current_user.latest_7_notifications.each do |notification|
+    %li{ :class => ("unseen" unless notification.seen?)}
+      = link_to notification.body, "#{notification.tunnel}?read_notification=#{notification.id}"
+    %li{ :class => "divider" }
+  %li= link_to "View all notifications", current_user

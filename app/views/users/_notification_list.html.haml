@@ -1,3 +1,4 @@
 %h1 Notifications
+%p= link_to "Mark all notifications as read", "#{current_page}?read_notification=all"
 - @user.notifications.each do |notification|
-  %p= notification.body
+  %p= link_to notification.body, "#{notification.tunnel}?read_notification=#{notification.id}"
