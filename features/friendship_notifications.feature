@@ -26,7 +26,7 @@ Scenario: A user should can see number of friend requests on their menu bar
   When I follow "Friend request"
   And I follow "Accept"
   And I follow "Friend request"
-  Then I should be on the listings page
+  Then I should be on the homepage
   And I should not see "1"
 
 Scenario: a user will receive a notification when a friend accepts their friendship
