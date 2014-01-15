@@ -35,7 +35,7 @@ Given(/^I create a listing with "(.*?)" input$/) do |type|
   fill_in("listing[title]", with: input[:title])
   fill_in("listing[description]", with: input[:description])
   fill_in("listing[positions]", with: input[:positions])
-  select(input[:end_year], from: "listing[end_time(1i)]")
+  # select(input[:end_year], from: "listing[end_time(1i)]")
   select(input[:audience], from: "listing[audience]")
   click_button("Save Listing")
 end

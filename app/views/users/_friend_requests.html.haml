@@ -1,4 +1,5 @@
 %h1 Friend Requests
+= link_to "Accept all friend requests", friendship_create_path(accept_all: true)
 - @user.requested_friends.each do |requested_friend|
   %p
     = link_to requested_friend.name, requested_friend

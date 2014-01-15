@@ -1,4 +1,5 @@
-= form_for @listing do |f|
+= form_for @listing, :html => { :class => 'form-horizontal' } do |f|
+  
   - if @listing.errors.any?
     #error_explanation
       %h2= "#{pluralize(@listing.errors.count, "error")} prohibited this listing from being saved:"
@@ -6,32 +7,44 @@
         - @listing.errors.full_messages.each do |msg|
           %li= msg
 
-  .field
-    = f.label :price
-    = f.text_field :price
-  .field
-    = f.label :title
-    = f.text_field :title
-  .field
-    = f.label :description
-    = f.text_area :description
-  .field
-    = f.label :start_time
-    = f.datetime_select :start_time
-  .field
-    = f.label :end_time
-    = f.datetime_select :end_time
-  .field
-    Positions available:
-    = f.number_field :positions
-  .field
-    Are you a customer or service provider?
-    = f.select :category, Listing.categories
-  .field
-    = f.label :audience
-    = f.select :audience, Listing.audiences
-
-  .actions
-    = f.submit 'Save Listing'
-
-
+  .control-group
+    = f.label :title, :class => 'control-label'
+    .controls
+      = f.text_field :title, :class => 'long-input'
+  .control-group
+    = f.label :description, :class => 'control-label'
+    .controls
+      = f.text_area :description, :class => 'long-input'
+  .control-group
+    = f.label :price, :class => 'control-label'
+    .controls
+      = f.text_field :price
+  .control-group
+    = f.label :start_time, :class => 'control-label'
+    .controls
+      .input-append.date{ :id => 'datetimepicker'}
+        = f.text_field :start_time
+        %span{ :class => 'add-on' }
+          %i{ 'data-time-icon' => 'icon-time', 'data-date-icon' => 'icon-calendar'}
+  .control-group
+    = f.label :end_time, :class => 'control-label'
+    .controls
+      .input-append.date{ :id => 'datetimepicker2'}
+        = f.text_field :end_time
+        %span{ :class => 'add-on' }
+          %i{ 'data-time-icon' => 'icon-time', 'data-date-icon' => 'icon-calendar'}
+  .control-group
+    = f.label :positions, :class => 'control-label'
+    .controls
+      = f.number_field :positions
+  .control-group
+    = f.label :category, :class => 'control-label'
+    .controls
+      = f.select :category, Listing.categories
+  .control-group
+    = f.label :audience, :class => 'control-label'
+    .controls
+      = f.select :audience, Listing.audiences
+  .form-actions
+    = f.submit 'Save Listing', :class => 'btn btn-primary'
+    = link_to t('.cancel', :default => t("helpers.links.cancel")), listings_path, :class => 'btn'

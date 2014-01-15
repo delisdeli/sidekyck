@@ -4,10 +4,20 @@
     %span{ :class => "badge" }
       = current_user.unseen_notifications_count
 %ul{ :class => 'dropdown-menu' }
-  %li= link_to "Mark all notifications as read", "#{current_page}?read_notification=all"
+  %li
+    .mini
+      .pull-left
+        %strong Notifications
+      .pull-right
+        = link_to "Mark all notifications as read", "#{current_page}?read_notification=all"
   %li{ :class => "divider" }
   - current_user.latest_7_notifications.each do |notification|
-    %li{ :class => ("unseen" unless notification.seen?)}
-      = link_to notification.body, "#{notification.tunnel}?read_notification=#{notification.id}"
+    %li
+      = link_to "#{notification.tunnel}?read_notification=#{notification.id}" do
+        - unless notification.seen?
+          %span{ :class => "label label-info" } new
+        = notification.body
     %li{ :class => "divider" }
-  %li= link_to "View all notifications", current_user
+  %li
+    .mini
+      = link_to "View all notifications", current_user

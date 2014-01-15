@@ -1,12 +1,22 @@
-= link_to (image_tag "friend_request.svg"), "#", :class => "dropdown-toggle", :data => {:toggle => "dropdown"}
-- if current_user.has_friend_requests?
-  %span{ :class => "badge" }
-    = current_user.friend_request_count
+= link_to "#", :class => "dropdown-toggle", :data => {:toggle => "dropdown"} do
+  = image_tag "friend_request.svg"
+  - if current_user.has_friend_requests?
+    %span{ :class => "badge" }
+      = current_user.friend_request_count
 %ul{ :class => 'dropdown-menu' }
+  %li
+    .mini
+      .pull-left
+        %strong Friend Requests
+      .pull-right
+        = link_to "Accept all friend requests", friendship_create_path(accept_all: true)
+  %li{ :class => "divider" }
   - current_user.requested_friends.each do |requested_friend|
     %li
       = link_to requested_friend.name, requested_friend
       = link_to "Accept", friendship_create_path(accept_request: true, friend_id: requested_friend)
       = link_to "Decline", friendship_destroy_path(friend_id: requested_friend)
     %li{ :class => "divider" }
-  %li= link_to "View all friendship requests", current_user
+  %li
+    .mini
+      = link_to "View all friendship requests", current_user

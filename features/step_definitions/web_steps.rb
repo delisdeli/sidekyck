@@ -100,6 +100,7 @@ end
 When /^(?:|I )follow "([^"]*)"$/ do |link|
   click_link(link)
 end
+
 When /^I follow "(.*)" inside the "(.*)" element$/ do |link, element|
   within(".#{element}") do
     click_link(link)

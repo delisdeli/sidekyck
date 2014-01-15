@@ -35,6 +35,9 @@ module NavigationHelpers
       "/listings/#{listing_id}/edit"
     when /^the view page for notifications$/
       "/users/1"
+    when /^the friend request page for user "(.*)"$/
+      user_id = User.find_by_name($1).id
+      "/users/#{user_id}"
 
     # Add more mappings here.
     # Here is an example that pulls values out of the Regexp:

@@ -2,20 +2,26 @@ class FriendshipController < ApplicationController
   before_filter :signed_in?
 
   def create
-    friend = User.find_by_id(params[:friend_id])
-    if params[:sent_request]
-      unless Friendship.request(current_user, friend) == "failed"
-        flash[:green] = "Friendship request sent."
-        friend.send_friend_request_notification(current_user)
-      else
-        flash[:blue] = "Friend request pending."
-      end
-    elsif params[:accept_request]
-      unless Friendship.accept(current_user, friend) == "failed"
-        flash[:green] = "You are now friends!"
-        friend.send_friend_acceptance_notification(current_user)
-      else
-        flash[:blue] = "You are already friends."
+    if params[:accept_all]
+      friend_request_count = current_user.friend_request_count
+      current_user.accept_all_friend_requests
+      flash[:green] = "You have accepted all your friend requests."
+    else
+      friend = User.find_by_id(params[:friend_id])
+      if params[:sent_request]
+        unless Friendship.request(current_user, friend) == "failed"
+          flash[:green] = "Friendship request sent."
+          friend.send_friend_request_notification(current_user)
+        else
+          flash[:blue] = "Friend request pending."
+        end
+      elsif params[:accept_request]
+        unless Friendship.accept(current_user, friend) == "failed"
+          flash[:green] = "You are now friends!"
+          friend.send_friend_acceptance_notification(current_user)
+        else
+          flash[:blue] = "You are already friends."
+        end
       end
     end
 

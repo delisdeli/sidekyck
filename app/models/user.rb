@@ -51,6 +51,12 @@ class User < ActiveRecord::Base
     self.requested_friendships.count
   end
 
+  def accept_all_friend_requests
+    self.requested_friendships.each do |friend_request|
+      Friendship.accept(friend_request.user, friend_request.friend)
+    end
+  end
+
   def is_user? user
     self == user
   end

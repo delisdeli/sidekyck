@@ -7,9 +7,9 @@
         - if signed_in?
           %li= link_to current_user.name, current_user
           %li{ :class => 'icon dropdown' }
-            = render "shared/notifications"
-          %li{ :class => 'icon' }
             = render "shared/friend_requests"
+          %li{ :class => 'icon dropdown' }
+            = render "shared/notifications"
           %li{ :class => 'divider-vertical' }
           %li{ :class => 'icon' }
             = link_to (image_tag "settings_icon.svg"), edit_user_path(current_user)

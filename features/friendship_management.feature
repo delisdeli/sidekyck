@@ -108,6 +108,28 @@ Scenario: After a user accepts a request, they will both have complementary 'acc
   Given I am on the profile page for "fbuser"
   Then I should see "twitteruser" after "Friends"
 
+Scenario: A user will be able to accept all friend requests through the userbar
+  Given the following friendships exist:
+    | user_id  | friend_id  | status     |
+    | 1        | 2          | pending    |
+    | 2        | 1          | requested  |
+  And I am signed in with provider "twitter"
+  And I am on the homepage
+  And I follow "Accept all friend requests"
+  Then I should see "You have accepted all your friend requests."
+  And there should be a friendship between "fbuser" and "twitteruser"
+
+Scenario: A user will be able to accept all friend requests through the friend request page
+  Given the following friendships exist:
+    | user_id  | friend_id  | status     |
+    | 1        | 2          | pending    |
+    | 2        | 1          | requested  |
+  And I am signed in with provider "twitter"
+  And I am on the friend request page for user "twitteruser"
+  And I follow "Accept all friend requests" inside the "friend-requests" element
+  Then I should see "You have accepted all your friend requests."
+  And there should be a friendship between "fbuser" and "twitteruser"
+
 Scenario: After a user rejects a request, they will both not have a friendship
   Given the following friendships exist:
     | user_id  | friend_id  | status     |

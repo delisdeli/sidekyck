@@ -31,7 +31,7 @@ class ListingsController < ApplicationController
   # POST /listings
   def create
     @listing = current_user.listings.build(listing_params)
-    if current_user.save!
+    if current_user.save
       flash[:green] = 'Listing was successfully created.'
       redirect_to @listing
     else

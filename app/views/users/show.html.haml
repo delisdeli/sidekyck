@@ -9,7 +9,8 @@
 = render 'friend_list'
 
 - if @user.is_user? current_user
-  = render 'friend_requests'
+  .friend-requests
+    = render 'friend_requests'
   = render 'friends_pending'
   /= link_to 'Edit Information', edit_user_registration_path
   
