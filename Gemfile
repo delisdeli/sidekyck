@@ -22,12 +22,6 @@ group :production do
   gem 'pg'
 end
 
-group :assets do
-  gem 'sass-rails', '~> 4.0.0'
-  gem 'coffee-rails', '~> 4.0.0'
-  gem 'uglifier', '>= 1.3.0'
-end
-
 gem 'rails', '4.0.2'
 gem 'jquery-rails'
 gem 'turbolinks'
@@ -38,4 +32,9 @@ gem 'bcrypt-ruby', '~> 3.1.2'
 gem 'haml'
 gem "therubyracer"
 gem "less-rails"
-gem "twitter-bootstrap-rails"
+gem 'sass-rails', '~> 4.0.0'
+gem 'coffee-rails', '~> 4.0.0'
+gem 'uglifier', '>= 1.3.0'
+gem 'anjlab-bootstrap-rails', :require => 'bootstrap-rails',
+                              :github => 'anjlab/bootstrap-rails',
+                              :branch => '3.0.0'

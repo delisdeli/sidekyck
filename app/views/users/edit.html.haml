@@ -30,8 +30,10 @@
         = link_to " | Login with Twitter", "/auth/twitter"
 
 %br
-.well.danger
-  %h3
-    %i{ :class => "icon-warning-sign" }
-    Danger Zone
-  = link_to 'Delete Account', @user, :method => :delete, :data => { :confirm => 'Are you sure? All you data will be erased permanently.' }, class: 'btn btn-danger'
+.panel.panel-danger
+  .panel-heading
+    %h4
+      %i{ :class => "icon-warning-sign" }
+      Danger Zone
+  .panel-body
+    = link_to 'Delete Account', @user, :method => :delete, :data => { :confirm => 'Are you sure? All you data will be erased permanently.' }, class: 'btn btn-danger'
