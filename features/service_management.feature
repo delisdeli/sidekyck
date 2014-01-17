@@ -25,6 +25,7 @@ Scenario: Eligible users can apply for a listing
   Then I should be on the show page for listing "first listing"
   Then I should see "twitteruser" after "Applicants"
   And I should see "You have applied for this listing!"
+  And I should not see "Apply"
 
 Scenario: Applicants will be able to rescind their application
   Given I am signed in with provider "twitter"
@@ -83,6 +84,7 @@ Scenario: When a user is hired, they will be able to quit jobs they haven't comp
   Then I should be on the show page for listing "first listing"
   And I should see "You have quit. Someone else will be able to fill your position."
   And listing "first listing" should have status "active"
+  And I should not see "twitteruser Job quit on" after "Currently hired:"
 
 @javascript
 Scenario: When a user is hired, they will be able to quit jobs they have completed
@@ -97,6 +99,7 @@ Scenario: When a user is hired, they will be able to quit jobs they have complet
   Then I should be on the show page for listing "first listing"
   And I should see "You have quit. Someone else will be able to fill your position."
   And listing "first listing" should have status "active"
+  And I should not see "twitteruser Job quit on" after "Currently hired:"
 
 @javascript
 Scenario: Listers will be able to approve jobs that are marked as completed
@@ -136,3 +139,5 @@ Scenario: Listers will be able to reactivate rejected jobs to the original audie
   Then I should see "Job not approved. This job has been relisted."
   Then "twitteruser" should not be hired for "first listing"
   And listing "first listing" should have status "active"
+
+Scenario: When a user is hired, they will not be able to apply to the same listing until their job is terminated

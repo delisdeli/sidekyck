@@ -1,16 +1,24 @@
-%p
-  %b Name:
-  = @user.name
+.row
+  .span3
+    %h1= @user.name
+    = render 'profile_friendship'
 
-= render 'profile_friendship'
-= render 'listings'
-.notifications
-  = render 'notification_list'
-= render 'friend_list'
-
-- if @user.is_user? current_user
-  .friend-requests
-    = render 'friend_requests'
-  = render 'friends_pending'
-  /= link_to 'Edit Information', edit_user_registration_path
-  
+    %ul{ :class => "nav nav-pills nav-stacked" }
+      %li{ :class => ('active' unless @to_show) }
+        = link_to "Active Listings", @user
+      %li{ :class => ('active' if @to_show == 'notifications') }
+        = link_to "Notifications", params.merge(to_show: 'notifications')
+      %li{ :class => ('active' if @to_show == 'friends') }
+        = link_to "Friends", params.merge(to_show: 'friends')
+  .span9
+    - if @to_show == 'friends'
+      = render 'friend_list'
+      - if @user.is_user? current_user
+        .friend-requests
+          = render 'friend_requests'
+        = render 'friends_pending'
+    - elsif @to_show == 'notifications'
+      .notifications
+        = render 'notification_list'
+    - else 
+      = render 'listings'

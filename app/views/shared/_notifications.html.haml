@@ -1,7 +1,7 @@
 = link_to "#", :class => "dropdown-toggle", :data => {:toggle => "dropdown"} do
   = image_tag "bell_icon.svg"
   - if current_user.has_unseen_notifications?
-    %span{ :class => "badge" }
+    %span{ :class => "badge badge-success" }
       = current_user.unseen_notifications_count
 %ul{ :class => 'dropdown-menu' }
   %li

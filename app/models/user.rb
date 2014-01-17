@@ -141,7 +141,8 @@ class User < ActiveRecord::Base
 
   def can_apply_for_listing? listing
     !is_user?(listing.user) and listing.is_active? and (listing.audience == 'everyone' or
-      (is_friends_with? listing.user and listing.audience == 'friends'))
+      (is_friends_with? listing.user and listing.audience == 'friends')) and 
+        !applied_to_listing?(listing)
   end
 
   def applied_to_listing? listing

@@ -1,22 +1,37 @@
-Settings for @user.name
+%h1 Settings
 
-%p= link_to 'Sign out', signout_path
-
-%h1 Currenly authenticated through:
-
+%h3
+  Authentications
+  %small
+    authenticating through any of the following providers will access this one account
 - @user.providers.each do |provider|
   %p
-    = provider.name
+    %button{ :class => "btn btn-#{provider.name}"}
+      %i{ :class => "fa fa-#{provider.name}" }
+        = link_to "| Authenticated through #{capitalize_first(provider.name)}", "#"
     - if @user.has_multiple_providers?
       = link_to "Delete #{provider.name}", provider, :method => :delete
 
-%h1 Add the following additional providers to your account:
-*you will be able to login through either in the future
+%h3
+  Add additional authentications
+  %small
+    additional authentications will link to this account
 
 - unless @user.has_provider? "facebook"
-  = link_to "Login with Facebook", "/auth/facebook"
-- unless @user.has_provider? "twitter"
-  = link_to "Login with Twitter", "/auth/twitter"
+  %p
+    %button{ :class => "btn btn-facebook"}
+      %i{ :class => "fa fa-facebook" }
+        = link_to " | Login with Facebook", "/auth/facebook"
 
-Delete Account
-= link_to 'Delete Account', @user, :method => :delete, :data => { :confirm => 'Are you sure? All you data will be erased permanently.' }
+- unless @user.has_provider? "twitter"
+  %p
+    %button{ :class => "btn btn-twitter"}
+      %i{ :class => "fa fa-twitter" }
+        = link_to " | Login with Twitter", "/auth/twitter"
+
+%br
+.well.danger
+  %h3
+    %i{ :class => "icon-warning-sign" }
+    Danger Zone
+  = link_to 'Delete Account', @user, :method => :delete, :data => { :confirm => 'Are you sure? All you data will be erased permanently.' }, class: 'btn btn-danger'

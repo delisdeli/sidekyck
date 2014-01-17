@@ -8,6 +8,7 @@ class UsersController < ApplicationController
   end
 
   def show
+    @to_show = params[:to_show]
   end
 
   def destroy

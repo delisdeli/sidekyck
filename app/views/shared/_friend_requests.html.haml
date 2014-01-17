@@ -1,7 +1,7 @@
 = link_to "#", :class => "dropdown-toggle", :data => {:toggle => "dropdown"} do
   = image_tag "friend_request.svg"
   - if current_user.has_friend_requests?
-    %span{ :class => "badge" }
+    %span{ :class => "badge badge-success" }
       = current_user.friend_request_count
 %ul{ :class => 'dropdown-menu' }
   %li
