@@ -19,4 +19,4 @@
     %li{ :class => "divider" }
   %li
     .mini
-      = link_to "View all friendship requests", current_user
+      = link_to "View all friendship requests", user_path(current_user, to_show: 'friends')

@@ -8,14 +8,27 @@
         = link_to "Active Listings", @user
       %li{ :class => ('active' if @to_show == 'notifications') }
         = link_to "Notifications", params.merge(to_show: 'notifications')
-      %li{ :class => ('active' if @to_show == 'friends') }
+      %li{ :class => ('active' if ['friends', 'friend_requests', 'friends_pending'].include?(@to_show)) }
         = link_to "Friends", params.merge(to_show: 'friends')
+    - if ['friends', 'friend_requests', 'friends_pending'].include? @to_show
+      - if current_user.is_user? @user
+        .indent
+          %ul{ :class => "nav nav-pills nav-stacked" }
+            %li{ :class => ('active' if @to_show == 'friends') }
+              = link_to "Friends", params.merge(to_show:'friends')
+            %li{ :class => ('active' if @to_show == 'friend_requests') }
+              = link_to "Friend Requests", params.merge(to_show: 'friend_requests')
+            %li{ :class => ('active' if @to_show == 'friends_pending') }
+              = link_to "Friends Pending", params.merge(to_show: 'friends_pending')
   .span9
     - if @to_show == 'friends'
       = render 'friend_list'
-      - if @user.is_user? current_user
+    - elsif @to_show == 'friend_requests'
+      - if current_user.is_user? @user
         .friend-requests
           = render 'friend_requests'
+    - elsif @to_show == 'friends_pending'
+      - if current_user.is_user? @user
         = render 'friends_pending'
     - elsif @to_show == 'notifications'
       .notifications

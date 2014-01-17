@@ -20,4 +20,4 @@
     %li{ :class => "divider" }
   %li
     .mini
-      = link_to "View all notifications", current_user
+      = link_to "View all notifications", user_path(current_user, to_show: 'notifications')

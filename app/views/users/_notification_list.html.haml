@@ -1,4 +1,11 @@
-%h2 Notifications
-%p= link_to "Mark all notifications as read", "#{current_page}?read_notification=all"
-- @user.notifications.each do |notification|
-  %p= link_to notification.body, "#{notification.tunnel}?read_notification=#{notification.id}"
+%h2
+  Notifications
+  %small
+    = link_to "Mark all notifications as read", params.merge(read_notification: 'all', to_show: 'notifications')
+%table{ :class => 'table' }
+  - @user.notifications.each do |notification|
+    %tr
+      %td
+        - unless notification.seen?
+          %span{ :class => "label label-info" } new
+        = link_to notification.body, "#{notification.tunnel}?read_notification=#{notification.id}"
