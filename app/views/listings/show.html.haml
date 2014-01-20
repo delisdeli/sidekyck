@@ -1,54 +1,73 @@
-%h1= @listing.title
-%p= @listing.description
-%p
-  Positions available: 
-  = @listing.positions
-%p
-  Start Date: 
-  = @listing.start_time
-%p
-  End Date: 
-  = @listing.end_time
-%p
-  This listing is available for: 
-  = @listing.audience
+.text-center
+  %h1
+    = @listing.title
+    %small
+      = link_to @listing.user.name, @listing.user
+.row
+  .span9.center
+    .span3.remove-left-margin.text-center
+      / .token-label
+      /   Earn
+      .token.center
+        .token-content
+          = "$#{@listing.price}" 
+      .well
+        %h4
+          %i{ :class => "icon-time" }
+          Complete between
+        %p
+          = format_time @listing.start_time
+        %p and
+        %p
+          = format_time @listing.end_time
+      %h4
+        %i{ :class => "icon-globe" }
+        This listing is available for
+        = @listing.audience    
+    .span6
+      .well.blue
+        %p= @listing.description
 
-- if admin_user? or current_user? @listing.user
-  = link_to 'Edit Listing', edit_listing_path(@listing)
-  = link_to 'Delete Listing', @listing, :method => :delete, :data => { :confirm => 'Are you sure?' }
 
-- if signed_in? and current_user.can_apply_for_listing? @listing
-  = link_to 'Apply', listing_apply_path(@listing), class: "btn btn-primary"
+      - if admin_user? or current_user? @listing.user
+        = link_to 'Edit Listing', edit_listing_path(@listing), class: 'btn'
+        = link_to 'Delete Listing', @listing, :method => :delete, :data => { :confirm => 'Are you sure?' }, class: 'btn btn-danger'
+        %br
 
-%h3 Applicants
-- @listing.applicants.each do |applicant|
-  %p
-    = link_to applicant.user.name, applicant.user
-    - if current_user? @listing.user
-      = link_to 'Hire', listing_employ_path(@listing, applicant_id: applicant.user.id ), data: { confirm: "Are you sure you want to hire #{@listing.user.name}?" }, class: "btn btn-success"
-    - elsif current_user? applicant.user
-      = link_to 'Rescind Application', listing_unapply_path(@listing, applicant_id: applicant.id), data: { confirm: "Are you sure you want to rescind your application?" }, class: "btn btn-danger"
+      %h3 Applicants
+      - @listing.applicants.each do |applicant|
+        %p
+          = link_to applicant.user.name, applicant.user
+          - if current_user? @listing.user
+            = link_to 'Hire', listing_employ_path(@listing, applicant_id: applicant.user.id ), data: { confirm: "Are you sure you want to hire #{@listing.user.name}?" }, class: "btn btn-success"
+          - elsif current_user? applicant.user
+            = link_to 'Rescind Application', listing_unapply_path(@listing, applicant_id: applicant.id), data: { confirm: "Are you sure you want to rescind your application?" }, class: "btn btn-danger"
+      - if signed_in? and current_user.can_apply_for_listing? @listing
+        = link_to 'Apply', listing_apply_path(@listing), class: "btn btn-primary"
 
-%h3 Currently hired
-- @listing.services.each do |service_object|
-  %p
-    = link_to service_object.associate.name, service_object.associate
-    - if service_object.complete?
-      = "Job completed on #{service_object.completion_time}."
-    - if current_user? service_object.associate
-      - if service_object.pending_approval?
-        Approval Pending
-      - elsif service_object.active?
-        = link_to 'Job Complete', listing_service_path(@listing, id: service_object, submit: true), method: :put, data: { confirm: 'Are you sure you are finished?' }, class: "btn btn-success"
-      = link_to 'Quit Job', listing_service_path(@listing, id: service_object, quit: true), method: :put, data: { confirm: 'Are you sure you want to quit?' }, class: "btn btn-danger"
-    - if service_object.pending_approval? and current_user? @listing.user
-      - if @rejected
-        = form_for [@listing, service_object], url: listing_service_path(@listing, service_object) do |f|
-          Notes:
-          = f.text_area :notes
-          = f.submit 'Rehire'
-          = f.submit 'Relist'
-        = link_to 'Cancel', listing_path(@listing), class: "btn btn-default"
-      - else
-        = link_to 'Approve', listing_service_path(@listing, id: service_object, approve: true), method: :put, data: { confirm: 'Are you sure you approve this job?' }, class: "btn btn-success"
-        = link_to 'Reject', listing_path(@listing, reject: true), class: "btn btn-danger"
+      %h3
+        Positions filled
+        %small
+          = "#{@listing.services.count} of #{@listing.positions}"
+      - @listing.services.each do |service_object|
+        %p
+          = link_to service_object.associate.name, service_object.associate
+          - if service_object.complete?
+            = "Job completed on #{service_object.completion_time}."
+          - if current_user? service_object.associate
+            - if service_object.pending_approval?
+              Approval Pending
+            - elsif service_object.active?
+              = link_to 'Job Complete', listing_service_path(@listing, id: service_object, submit: true), method: :put, data: { confirm: 'Are you sure you are finished?' }, class: "btn btn-success"
+            = link_to 'Quit Job', listing_service_path(@listing, id: service_object, quit: true), method: :put, data: { confirm: 'Are you sure you want to quit?' }, class: "btn btn-danger"
+          - if service_object.pending_approval? and current_user? @listing.user
+            - if @rejected
+              = form_for [@listing, service_object], url: listing_service_path(@listing, service_object) do |f|
+                Notes:
+                = f.text_area :notes
+                = f.submit 'Rehire'
+                = f.submit 'Relist'
+              = link_to 'Cancel', listing_path(@listing), class: "btn btn-default"
+            - else
+              = link_to 'Approve', listing_service_path(@listing, id: service_object, approve: true), method: :put, data: { confirm: 'Are you sure you approve this job?' }, class: "btn btn-success"
+              = link_to 'Reject', listing_path(@listing, reject: true), class: "btn btn-danger"

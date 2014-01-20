@@ -34,6 +34,7 @@ body { padding-top: 60px; }
 @salmonPastel: #E89C7B;
 @purplePastel: #B497C6;
 @lightTan: #EEECDF;
+@yellowPastel: #FFEF97;
 
 body {
   font-family: 'Maven Pro', sans-serif;
@@ -135,12 +136,27 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .well {
-  &.danger {
-    & h3 {
-      color: #da4f49;
+  &.red {
+    color: white;
+    background-color: #E89C7B;
+    h3 {
       margin-top: 0;
     }
-    background-color: #E89C7B;
+    &.small {
+      padding: 10px;
+      display: inline-block;
+      margin: 10px;
+    }
+    &.price {
+      font-size: 24.5px;
+      line-height: 24.5px;
+      text-align: center;
+      padding: 10px;
+      margin-top: 60px;
+    }
+  }
+  &.blue {
+    background-color: #B8E3E8;
   }
 }
 
@@ -150,4 +166,52 @@ h1, h2, h3, h4, h5, h6 {
 
 .indent {
   margin-left: 15px;
+}
+
+.center {
+float: none;
+.center-block();
+}
+
+.span9 > .span3 {
+  margin-left: 0;
+}
+
+.token {
+  background-color: @yellowPastel;
+  border-radius: 50%;
+  font-size: 20px;
+  line-height: 20px;
+  border: #939078 3px dashed;
+  width: 80px;
+  height: 80px;
+  box-shadow: 0 0 0 15px @yellowPastel;
+  color: #939078;
+  margin-top: 15px;
+  margin-bottom: 35px;
+  font-weight: bold;
+}
+  
+.token-content {
+  margin-top: 30px;
+}
+
+.token-label {
+  margin-left: 20px;
+  margin-top: 35px;
+}
+
+body {
+  background-color: @lightTan;
+}
+
+.btn {
+  border: none;
+  & .btn-danger {
+    background-color: @salmonPastel;
+  }
+}
+
+small > a{
+  color: #999999;
 }
