@@ -51,11 +51,15 @@ Scenario: A user can send a friend request to another user and they will have a 
   And I should see "Friend Request Sent" between "twitteruser" and "Friends"
   And I should not see "Add Friend"
   Given I am on the profile page for "fbuser"
+  And I follow "Friends"
+  And I follow "Friends Pending"
   Then I should see "twitteruser" after "Friends Pending"
   Given I am on the signout page
   And I am signed in with provider "twitter"
   And I am on the profile page for "twitteruser"
-  Then I should see "fbuser" between "Friend Requests" and "Friends Pending"
+  And I follow "Friends"
+  And I follow "Friend Requests"
+  Then I should see "fbuser" after "Friend Requests"
 
 Scenario: A user can delete a friendship request they sent
   Given the following friendships exist:
@@ -64,6 +68,8 @@ Scenario: A user can delete a friendship request they sent
     | 2        | 1          | requested  |
   Given I am signed in with provider "facebook"
   And I am on the profile page for "fbuser"
+  And I follow "Friends"
+  And I follow "Friends Pending"
   Then I should see "twitteruser" between "Friends Pending" and "Cancel Request"
   When I follow "Cancel Request"
   Then I should see "You have ended your friendship with twitteruser."
@@ -104,8 +110,10 @@ Scenario: After a user accepts a request, they will both have complementary 'acc
   Then I should see "You are now friends!"
   And I should be on the homepage
   Given I am on the profile page for "twitteruser"
+  And I follow "Friends"
   Then I should see "fbuser" after "Friends"
   Given I am on the profile page for "fbuser"
+  And I follow "Friends"
   Then I should see "twitteruser" after "Friends"
 
 Scenario: A user will be able to accept all friend requests through the userbar
@@ -126,6 +134,8 @@ Scenario: A user will be able to accept all friend requests through the friend r
     | 2        | 1          | requested  |
   And I am signed in with provider "twitter"
   And I am on the friend request page for user "twitteruser"
+  And I follow "Friends"
+  And I follow "Friend Requests"
   And I follow "Accept all friend requests" inside the "friend-requests" element
   Then I should see "You have accepted all your friend requests."
   And there should be a friendship between "fbuser" and "twitteruser"

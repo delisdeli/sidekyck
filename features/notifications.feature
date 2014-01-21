@@ -45,6 +45,7 @@ Scenario: a notification will be marked as seen when it is clicked on in the use
 Scenario: a notification will be marked as seen when it is clicked on in the view notifications page
   Given I am on the view page for notifications
   Then notification "1" should not be seen
+  And I follow "Notifications"
   Given I follow "contents of notification" inside the "notifications" element
   Then notification "1" should be seen
 
@@ -57,6 +58,7 @@ Scenario: a user can read all their unseen notifications through their user bar
 Scenario: a user can read all their unseen notifications through view notifications page
   Given I am on the view page for notifications
   Then notification "1" should not be seen
+  And I follow "Notifications"
   When I follow "Mark all notifications as read" inside the "notifications" element
   Then I should be on the view page for notifications
   And notification "1" should be seen
@@ -82,6 +84,7 @@ Scenario: a notification with a path will be clickable
 Scenario: When a user deletes his account, all his notifications should be deleted
   Given I am on the homepage
   And I follow "Settings icon"
+  And I follow "Go to settings"
   And I follow "Delete Account"
   And I accept the alert
   Then I should be on the homepage

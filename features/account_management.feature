@@ -8,13 +8,13 @@ Feature: Manage account
 Scenario: An existing user should be able to access their settings page
   Given I am signed in with provider "facebook"
   And I am on the homepage
-  And I follow "Settings icon"
+  And I follow "Go to settings"
   Then I should be on the edit profile page for "fbuser"
 
 Scenario: An existing user should be able to see their current providers
   Given I am signed in with provider "facebook"
   And I am on the edit profile page for "fbuser"
-  Then I should see "facebook" between "Currenly authenticated through:" and "Add"
+  Then I should see "facebook" between "Authentications" and "Add additional authentications"
 
 Scenario: An existing user can add another provider to their account
   Given I am signed in with provider "facebook"

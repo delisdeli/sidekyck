@@ -38,7 +38,8 @@ body { padding-top: 60px; }
 
 body {
   font-family: 'Maven Pro', sans-serif;
-  font-weight: 400; 
+  font-weight: 400;
+  background-color: @lightTan;
 }
 
 .logo {
@@ -169,8 +170,8 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .center {
-float: none;
-.center-block();
+  float: none;
+  .center-block();
 }
 
 .span9 > .span3 {
@@ -182,7 +183,7 @@ float: none;
   border-radius: 50%;
   font-size: 20px;
   line-height: 20px;
-  border: #939078 3px dashed;
+  border: 3px dashed #939078;
   width: 80px;
   height: 80px;
   box-shadow: 0 0 0 15px @yellowPastel;
@@ -199,10 +200,6 @@ float: none;
 .token-label {
   margin-left: 20px;
   margin-top: 35px;
-}
-
-body {
-  background-color: @lightTan;
 }
 
 .btn {

@@ -27,8 +27,7 @@
     .span6
       .well.blue
         %p= @listing.description
-
-
+      
       - if admin_user? or current_user? @listing.user
         = link_to 'Edit Listing', edit_listing_path(@listing), class: 'btn'
         = link_to 'Delete Listing', @listing, :method => :delete, :data => { :confirm => 'Are you sure?' }, class: 'btn btn-danger'

@@ -48,8 +48,8 @@ Scenario: The lister can select who to hire among applicants for a particular li
   Then I should be on the show page for listing "first listing"
   And I should see "twitteruser has been hired for this listing!"
   And listing "first listing" should have status "inactive"
-  And I should see "twitteruser" after "Currently hired:"
-  And I should not see "twitteruser" between "Applicants:" and "Currently hired:"  
+  And I should see "twitteruser" after "Positions filled"
+  And I should not see "twitteruser" between "Applicants:" and "Positions filled"  
 
 @javascript
 Scenario: A listing's status will be changed from active to inactive once positions are filled
@@ -84,7 +84,7 @@ Scenario: When a user is hired, they will be able to quit jobs they haven't comp
   Then I should be on the show page for listing "first listing"
   And I should see "You have quit. Someone else will be able to fill your position."
   And listing "first listing" should have status "active"
-  And I should not see "twitteruser Job quit on" after "Currently hired:"
+  And I should not see "twitteruser Job quit on" after "Positions filled"
 
 @javascript
 Scenario: When a user is hired, they will be able to quit jobs they have completed
@@ -99,7 +99,7 @@ Scenario: When a user is hired, they will be able to quit jobs they have complet
   Then I should be on the show page for listing "first listing"
   And I should see "You have quit. Someone else will be able to fill your position."
   And listing "first listing" should have status "active"
-  And I should not see "twitteruser Job quit on" after "Currently hired:"
+  And I should not see "twitteruser Job quit on" after "Positions filled"
 
 @javascript
 Scenario: Listers will be able to approve jobs that are marked as completed

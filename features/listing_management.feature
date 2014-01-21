@@ -39,13 +39,13 @@ Scenario: an authenticated user can edit one of his listings
   And I am on the homepage
   And I follow "first listing"
   Then I should be on the show page for listing "first listing"
-  And I should not see "3" after "Positions available:"
+  And I should see "0 of 1" after "Positions filled"
   When I follow "Edit"
   Then I should be on the edit page for listing "first listing"
   When I fill in "3" for "listing[positions]"
   And I press "Save Listing"
   Then I should be on the show page for listing "first listing"
-  And I should see "3" after "Positions available:"
+  And I should see "0 of 3" after "Positions filled"
 
 Scenario: An authenticated user can see all their live listings
   Given I am signed in with provider "facebook"

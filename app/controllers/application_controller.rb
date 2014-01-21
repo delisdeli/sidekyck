@@ -67,7 +67,8 @@ class ApplicationController < ActionController::Base
   def active_listing
     listing = Listing.find(params[:listing_id])
     unless listing.status == 'active'
-      redirect_to root_url, "Cannot create job for inactive listing"
+      flash[:notice] = "Cannot create job for inactive listing"
+      redirect_to root_url
     end
   end
 
