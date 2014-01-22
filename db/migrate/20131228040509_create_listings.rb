@@ -1,7 +1,7 @@
 class CreateListings < ActiveRecord::Migration
   def change
     create_table :listings do |t|
-      t.decimal :price
+      t.integer :price
       t.text :description
       t.string :title
       t.datetime :start_time

@@ -33,7 +33,7 @@ ActiveRecord::Schema.define(version: 20140107185736) do
   add_index "friendships", ["user_id"], name: "index_friendships_on_user_id"
 
   create_table "listings", force: true do |t|
-    t.decimal  "price"
+    t.integer  "price"
     t.text     "description"
     t.string   "title"
     t.datetime "start_time"
