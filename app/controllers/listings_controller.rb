@@ -41,11 +41,16 @@ class ListingsController < ApplicationController
 
   # PATCH/PUT /listings/1
   def update
-    if @listing.update(listing_params)
-      flash[:green] = 'Listing was successfully updated.'
-      redirect_to @listing
+    if params[:deactivate]
+      @listing.status = 'inactive'
+      @listing.save!
     else
-      render action: 'edit'
+      if @listing.update(listing_params)
+        flash[:green] = 'Listing was successfully updated.'
+        redirect_to @listing
+      else
+        render action: 'edit'
+      end
     end
   end
 

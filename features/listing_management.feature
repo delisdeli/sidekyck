@@ -13,10 +13,10 @@ Feature: Listing management
     And I am on the signout page
 
     Given the following listings exist:
-      | user_id  | title           | description  | start_time  | end_time  | status    | positions  | category  | audience  | price  |
-      | 1        | first listing   | description  | TODAY       | NEVER     | active    | 1          | customer  | everyone  | 0      |
-      | 1        | second listing  | description  | TODAY       | NEVER     | inactive  | 2          | customer  | everyone  | 0      |
-      | 1        | third listing   | description  | TODAY       | NEVER     | inactive  | 0          | customer  | everyone  | 0      |
+      | user_id  | title           | description  | status    | positions  | category  | audience  | price  |
+      | 1        | first listing   | description  | active    | 1          | customer  | everyone  | 0      |
+      | 1        | second listing  | description  | inactive  | 2          | customer  | everyone  | 0      |
+      | 1        | third listing   | description  | inactive  | 0          | customer  | everyone  | 0      |
 
 Scenario: Only active listings will be seen on the homepage
   Given I am on the homepage
@@ -101,19 +101,21 @@ Scenario: Listers can delete their listings
   Then I should be on the homepage
   And listing "standard listing" should not exist
 
+@javascript
 Scenario: Increasing the number of positions can reactivate a listing
   Given I am signed in with provider "facebook"
-  And I am on the edit page for listing "first listing"
+  And I am on the edit page for listing "third listing"
   Then I should not see "Listing will be reactivated with this change"
   And I fill in "listing[positions]" with "1"
+  And I fill in "listing[title]" with "third listing" 
   Then I should see "Listing will be reactivated with this change"
   When I press "Save Listing"
-  Then listing "first listing" should have status "active"
+  Then listing "third listing" should have status "active"
 
 Scenario: The listing owner should be able to deactivate their listing
   Given I am signed in with provider "facebook"
-  And I am on the edit page for listing "first listing"
-  And I check "Deactivate Listing"
-  When I press "Save Listing"
+  And I am on the show page for listing "first listing"
+  Then listing "first listing" should have status "active"
+  And I follow "Deactivate Listing"
   Then listing "first listing" should have status "inactive"
   

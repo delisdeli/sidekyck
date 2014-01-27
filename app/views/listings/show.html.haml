@@ -30,6 +30,8 @@
       
       - if admin_user? or current_user? @listing.user
         = link_to 'Edit Listing', edit_listing_path(@listing), class: 'btn'
+        - if @listing.is_active?
+          = link_to "Deactivate Listing", listing_path(@listing, deactivate: true), :class => 'btn btn-inverse'
         = link_to 'Delete Listing', @listing, :method => :delete, :data => { :confirm => 'Are you sure?' }, class: 'btn btn-danger'
         %br
 

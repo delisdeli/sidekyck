@@ -1,3 +1,4 @@
+@omniauth_test
 Feature: Balance
  
   As a user

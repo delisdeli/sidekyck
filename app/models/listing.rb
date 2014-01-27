@@ -82,8 +82,6 @@ class Listing < ActiveRecord::Base
     self.end_time ||= self.start_time + 7.days
     errors.add(:start_time, "must be before end time") unless
      self.start_time <= self.end_time
-    errors.add(:start_time, "cannot be in the past") unless
-      self.start_time < Time.now
   end 
 
 end

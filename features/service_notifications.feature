@@ -13,9 +13,9 @@ Feature: Service notification
     And I am on the signout page
 
     Given the following listings exist:
-      | user_id  | title           | description  | start_time  | end_time  | status  | positions  | category  | audience  |
-      | 1        | first listing   | description  | TODAY       | NEVER     | active  | 1          | customer  | everyone  |
-      | 1        | second listing  | description  | TODAY       | NEVER     | active  | 2          | customer  | everyone  |
+      | user_id  | title           | description  | start_time  | end_time  | status  | positions  | category  | audience  | price  |
+      | 1        | first listing   | description  | TODAY       | NEVER     | active  | 1          | customer  | everyone  | 0      |
+      | 1        | second listing  | description  | TODAY       | NEVER     | active  | 2          | customer  | everyone  | 0      |
 
 Scenario: When someone applies for my listing I should receive a notification
   Given I am signed in with provider "twitter"
