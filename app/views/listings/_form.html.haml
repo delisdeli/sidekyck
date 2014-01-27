@@ -1,11 +1,12 @@
 = form_for @listing, :html => { :class => 'form-horizontal' } do |f|
   
   - if @listing.errors.any?
-    #error_explanation
-      %h2= "#{pluralize(@listing.errors.count, "error")} prohibited this listing from being saved:"
-      %ul
-        - @listing.errors.full_messages.each do |msg|
-          %li= msg
+    .well.red.center-block
+      #error_explanation
+        %h2= "#{pluralize(@listing.errors.count, "error")} prohibited this listing from being saved:"
+        %ul
+          - @listing.errors.full_messages.each do |msg|
+            %li= msg
 
   .control-group
     = f.label :title, :class => 'control-label'

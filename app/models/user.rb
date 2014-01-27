@@ -12,16 +12,10 @@ class User < ActiveRecord::Base
   has_many :pending_friends, through: :pending_friendships, :source => :friend
   
   has_many :applicants, dependent: :destroy
-
   has_many :listings
-  # has_many :services
-  # has_many :requested_services, -> { where type: 'requested'}, class_name: "Services"
-  # has_many :service_providers, through: :requested_services, source: :provider
-  # has_many :provided_services, -> { where type: 'provided'}, class_name: "Services"
-  # has_many :customers, through: :provided_services
-
 
   before_save :restrict_max_notifications
+  before_save :default_values
   before_destroy :destroy_complementary_friendships
 
   def add_provider(auth)
@@ -142,11 +136,15 @@ class User < ActiveRecord::Base
   def can_apply_for_listing? listing
     !is_user?(listing.user) and listing.is_active? and (listing.audience == 'everyone' or
       (is_friends_with? listing.user and listing.audience == 'friends')) and 
-        !applied_to_listing?(listing)
+        !applied_to_listing?(listing) and !working_on_listing?(listing)
   end
 
   def applied_to_listing? listing
     !!listing.applicants.find_by_user_id(self.id)
+  end
+
+  def working_on_listing? listing
+    not listing.live_services.where(provider_id: self.id).empty?
   end
 
   def friends_friend_listings
@@ -171,6 +169,32 @@ class User < ActiveRecord::Base
 
   def active_serices
     active_requested_services + active_provided_services
+  end
+
+  def pay(payee, amount)
+    # freeze account if self.balance < amount
+    self.balance -= amount
+    payee.balance += amount
+  end
+  
+  def pay_with_frozen_balance(payee, amount)
+    if self.frozen_balance < amount
+      amount_difference = amount - self.frozen_balance
+      payee.balance += self.frozen_balance
+      self.frozen_balance = 0
+      self.pay(payee, amount_difference)
+    else
+      self.frozen_balance -= amount
+      payee.balance += amount
+    end
+  end
+
+
+  private
+
+  def default_values
+    self.balance ||= 0
+    self.frozen_balance ||= 0
   end
 
 end

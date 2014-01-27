@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140107185736) do
+ActiveRecord::Schema.define(version: 20140123000026) do
 
   create_table "applicants", force: true do |t|
     t.integer  "listing_id"
@@ -81,6 +81,7 @@ ActiveRecord::Schema.define(version: 20140107185736) do
     t.text     "notes"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "hire_price"
   end
 
   add_index "services", ["listing_id"], name: "index_services_on_listing_id"
@@ -90,6 +91,8 @@ ActiveRecord::Schema.define(version: 20140107185736) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "admin"
+    t.integer  "balance"
+    t.integer  "frozen_balance"
   end
 
 end

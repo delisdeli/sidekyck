@@ -16,7 +16,7 @@ end
 
 Given(/^I create a listing with "(.*?)" input$/) do |type|
   if type == 'standard'
-    input = { price: '10',
+    input = { price: '0',
               title: 'standard listing',
               description: 'standard listing description',
               positions: '1',
@@ -24,7 +24,7 @@ Given(/^I create a listing with "(.*?)" input$/) do |type|
               end_time: "01/01/2015 12:00:00",
               audience: 'everyone'}
   elsif type == 'friend-only'
-    input = { price: '10',
+    input = { price: '0',
               title: 'friend-only listing',
               description: 'friend-only listing description',
               positions: '1',
@@ -41,6 +41,7 @@ Given(/^I create a listing with "(.*?)" input$/) do |type|
   fill_in("listing[end_time]", with: input[:end_time])
   select(input[:audience], from: "listing[audience]")
   click_button("Save Listing")
+  assert !!Listing.find_by_title(input[:title])
 end
 
 Then(/^listing "(.*?)" should not exist$/) do |title|
@@ -137,4 +138,10 @@ Given(/^"(.*?)" relists listing "(.*?)"$/) do |arg1, arg2|
     And I follow "Reject"
     And I press "Relist"
   }
+end
+
+Given(/^listing "(.*?)" has status "(.*?)"$/) do |listing_title, status|
+  listing = Listing.find_by_title(listing_title)
+  listing.status = status
+  listing.save!
 end

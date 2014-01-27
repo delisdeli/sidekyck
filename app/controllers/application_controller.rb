@@ -5,7 +5,8 @@ class ApplicationController < ActionController::Base
   # include SessionsHelper
 
   before_action :read_notifications
-  helper_method :current_user, :signed_in?, :correct_user?, :correct_or_admin_user?, :admin_user?, :current_user?, :last_page, :current_page
+  helper_method :current_user, :signed_in?, :correct_user?, :correct_or_admin_user?, :admin_user?,
+                  :current_user?, :last_page, :current_page
 
   def read_notifications
     if params[:read_notification] == "all"

@@ -1,5 +1,5 @@
 @omniauth_test
-Feature: Listing managemen
+Feature: Listing management
  
   As a user
   So that I can advertise my offered and desired services
@@ -13,9 +13,10 @@ Feature: Listing managemen
     And I am on the signout page
 
     Given the following listings exist:
-      | user_id  | title           | description  | start_time  | end_time  | status    | positions  | category  | audience  |
-      | 1        | first listing   | description  | TODAY       | NEVER     | active    | 1          | customer  | everyone  |
-      | 1        | second listing  | description  | TODAY       | NEVER     | inactive  | 2          | customer  | everyone  |
+      | user_id  | title           | description  | start_time  | end_time  | status    | positions  | category  | audience  | price  |
+      | 1        | first listing   | description  | TODAY       | NEVER     | active    | 1          | customer  | everyone  | 0      |
+      | 1        | second listing  | description  | TODAY       | NEVER     | inactive  | 2          | customer  | everyone  | 0      |
+      | 1        | third listing   | description  | TODAY       | NEVER     | inactive  | 0          | customer  | everyone  | 0      |
 
 Scenario: Only active listings will be seen on the homepage
   Given I am on the homepage
@@ -26,26 +27,38 @@ Scenario: An unauthenticated user cannot create a listing
   Given I am on the homepage
   Then I should not see "Create Listing"
 
-Scenario: an authenticated user can create a listing
+Scenario: an authenticated user cannot create a listing with invalid input
+  Given I am signed in with provider "facebook"
+  And I am on create listing page
+  And I press "Save Listing"
+  And I should see "6 errors prohibited this listing from being saved:"
+  And I should see "Title can't be blank"
+  And I should see "Description can't be blank"
+  And I should see "Price can't be blank"
+  And I should see "Price is not a number"
+  And I should see "Positions can't be blank"
+  And I should see "Positions is not a number"
+
+Scenario: an authenticated user can create a listing with valid input
   Given I am signed in with provider "facebook"
   And I am on the homepage
   And I create a listing with "standard" input
   Then I should be on the show page for listing "standard listing"
   And I should see "standard listing" before "standard listing description"
-  And I should see "standard listing "
+  And I should see "standard listing"
 
 Scenario: an authenticated user can edit one of his listings
   Given I am signed in with provider "facebook"
   And I am on the homepage
   And I follow "first listing"
   Then I should be on the show page for listing "first listing"
-  And I should see "0 of 1" after "Positions filled"
+  And I should see "1 Open" after "Positions filled"
   When I follow "Edit"
   Then I should be on the edit page for listing "first listing"
   When I fill in "3" for "listing[positions]"
   And I press "Save Listing"
   Then I should be on the show page for listing "first listing"
-  And I should see "0 of 3" after "Positions filled"
+  And I should see "3 Open" after "Positions filled"
 
 Scenario: An authenticated user can see all their live listings
   Given I am signed in with provider "facebook"
@@ -87,3 +100,20 @@ Scenario: Listers can delete their listings
   And I accept the alert
   Then I should be on the homepage
   And listing "standard listing" should not exist
+
+Scenario: Increasing the number of positions can reactivate a listing
+  Given I am signed in with provider "facebook"
+  And I am on the edit page for listing "first listing"
+  Then I should not see "Listing will be reactivated with this change"
+  And I fill in "listing[positions]" with "1"
+  Then I should see "Listing will be reactivated with this change"
+  When I press "Save Listing"
+  Then listing "first listing" should have status "active"
+
+Scenario: The listing owner should be able to deactivate their listing
+  Given I am signed in with provider "facebook"
+  And I am on the edit page for listing "first listing"
+  And I check "Deactivate Listing"
+  When I press "Save Listing"
+  Then listing "first listing" should have status "inactive"
+  

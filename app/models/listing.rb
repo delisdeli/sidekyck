@@ -4,8 +4,14 @@ class Listing < ActiveRecord::Base
   has_many :services
   has_many :applicants
 
-  validates :positions, numericality: { only_integer: true }
-  before_save :initialize_listing
+  validates :title, :description, :price, :positions, :category, :audience, presence: true
+  validates :positions, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+  validates :price, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+  validate :can_afford_listing?
+  validate :start_end_time_validations
+
+  before_save :default_values
+  before_save :update_status
 
   def is_active?
     self.status == 'active'
@@ -43,10 +49,41 @@ class Listing < ActiveRecord::Base
     self.save!
   end
 
+  def live_services
+    self.services.where.not(status: 'inactive')
+  end
+
+  # def open_positions_count
+  #   self.positions.to_i - self.live_services.count
+  # end
+
   private
 
-  def initialize_listing
-    (self.status = 'active') if self.status.nil?
+  def default_values
+    self.status ||= 'active'
+    self.positions ||= 1
   end
+
+  def update_status
+    if self.positions == 0 # or self.positions <= self.live_services.count
+      self.status = 'inactive'
+    end
+  end
+
+  def can_afford_listing?
+    balance_difference = self.user.balance.to_i - (self.price.to_i * self.positions.to_i)
+    if balance_difference < 0
+      errors.add(:price, "Your balance must be atleast #{balance_difference.abs} to create this listing")
+    end
+  end
+
+  def start_end_time_validations
+    self.start_time ||= Time.now
+    self.end_time ||= self.start_time + 7.days
+    errors.add(:start_time, "must be before end time") unless
+     self.start_time <= self.end_time
+    errors.add(:start_time, "cannot be in the past") unless
+      self.start_time < Time.now
+  end 
 
 end
