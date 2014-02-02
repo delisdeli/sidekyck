@@ -13,6 +13,8 @@ class User < ActiveRecord::Base
   
   has_many :applicants, dependent: :destroy
   has_many :listings
+  has_many :provided_services, -> { where provider_id: self.id }, class_name: "Service"
+  has_many :requested_services, -> { where customer_id: self.id }, class_name: "Service"
 
   before_save :restrict_max_notifications
   before_save :default_values
@@ -176,25 +178,28 @@ class User < ActiveRecord::Base
     self.balance -= amount
     payee.balance += amount
   end
-  
-  def pay_with_frozen_balance(payee, amount)
-    if self.frozen_balance < amount
-      amount_difference = amount - self.frozen_balance
-      payee.balance += self.frozen_balance
-      self.frozen_balance = 0
-      self.pay(payee, amount_difference)
-    else
-      self.frozen_balance -= amount
-      payee.balance += amount
-    end
-  end
 
+  def self.frozen_balance
+    # listings.
+  end
+  
+  # def pay_with_frozen_balance(payee, amount)
+  #   if self.frozen_balance < amount
+  #     amount_difference = amount - self.frozen_balance
+  #     payee.balance += self.frozen_balance
+  #     self.frozen_balance = 0
+  #     self.pay(payee, amount_difference)
+  #   else
+  #     self.frozen_balance -= amount
+  #     payee.balance += amount
+  #   end
+  # end
 
   private
 
   def default_values
     self.balance ||= 0
-    self.frozen_balance ||= 0
+    # self.frozen_balance ||= 0
   end
 
 end

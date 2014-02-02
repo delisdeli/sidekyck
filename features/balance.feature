@@ -15,7 +15,7 @@ Feature: Balance
       | user_id  | title           | description  | start_time  | end_time  | status  | positions  | category  | audience  | price  |
       | 1        | first listing   | description  | TODAY       | NEVER     | active  | 1          | customer  | everyone  | 10     |
 
-Scenario: When a user creates a listing, they'll be stopped if the listings price and positions product is greater than their available balance
+Scenario: When a user creates a listing, they'll be stopped if the product of the listings price and num positions is greater than their available balance
 
 Scenario: When a user creates a listing, the value of the price and positions product will be frozen from their balance
 

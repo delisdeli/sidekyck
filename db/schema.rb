@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140123000026) do
+ActiveRecord::Schema.define(version: 20140122220453) do
 
   create_table "applicants", force: true do |t|
     t.integer  "listing_id"
@@ -92,7 +92,6 @@ ActiveRecord::Schema.define(version: 20140123000026) do
     t.datetime "updated_at"
     t.boolean  "admin"
     t.integer  "balance"
-    t.integer  "frozen_balance"
   end
 
 end

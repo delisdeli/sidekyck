@@ -28,7 +28,8 @@ class Service < ActiveRecord::Base
 
   def approve
     self.status = 'complete'
-    self.customer.pay_with_frozen_balance(provider, self.hire_price)
+    # self.customer.pay_with_frozen_balance(provider, self.hire_price)
+    self.customer.pay(provider, self.hire_price)
     self.completion_time = Time.now
     self.notes = "Completed on #{format_time(self.completion_time)}."
     self.save!
