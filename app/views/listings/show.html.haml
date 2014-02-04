@@ -31,8 +31,11 @@
       - if admin_user? or current_user? @listing.user
         = link_to 'Edit Listing', edit_listing_path(@listing), class: 'btn'
         - if @listing.is_active?
-          = link_to "Deactivate Listing", listing_path(@listing, deactivate: true), :class => 'btn btn-inverse'
-        = link_to 'Delete Listing', @listing, :method => :delete, :data => { :confirm => 'Are you sure?' }, class: 'btn btn-danger'
+          = link_to "Deactivate Listing", listing_path(@listing, deactivate: true), method: :put, :class => 'btn btn-inverse'
+        - else
+          Add positions to activate listing
+        - unless @listing.has_services?
+          = link_to 'Delete Listing', @listing, :method => :delete, :data => { :confirm => 'Are you sure?' }, class: 'btn btn-danger'
         %br
 
       %h3 Applicants
@@ -52,6 +55,8 @@
           = "#{@listing.positions} Open"
       - @listing.services.each do |service_object|
         %p
+          %span{ :class => (service_object.complete? ? "badge badge-success" : "badge") }
+            = "$#{service_object.hire_price}"
           = link_to service_object.associate.name, service_object.associate
           = service_object.notes
           - if current_user? service_object.associate

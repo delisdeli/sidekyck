@@ -3,6 +3,12 @@
     %h1= @user.name
     = render 'profile_friendship'
 
+    - if correct_user?
+      %h3 Balance
+      = "$#{@user.balance}"
+      %h3 Frozen Balance
+      = "$#{@user.frozen_balance}"
+
     %ul{ :class => "nav nav-pills nav-stacked" }
       %li{ :class => ('active' unless @to_show) }
         = link_to "Active Listings", @user

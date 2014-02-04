@@ -22,6 +22,10 @@ class Service < ActiveRecord::Base
     self.status == 'active'
   end
 
+  def complete?
+    self.status == 'complete'
+  end
+
   def can_quit?
     pending_approval? or active?
   end

@@ -13,8 +13,8 @@ class User < ActiveRecord::Base
   
   has_many :applicants, dependent: :destroy
   has_many :listings
-  has_many :provided_services, -> { where provider_id: self.id }, class_name: "Service"
-  has_many :requested_services, -> { where customer_id: self.id }, class_name: "Service"
+  # has_many :provided_services, -> { where provider_id: self.id }, class_name: "Service"
+  # has_many :requested_services, -> { where customer_id: self.id }, class_name: "Service"
 
   before_save :restrict_max_notifications
   before_save :default_values
@@ -162,15 +162,23 @@ class User < ActiveRecord::Base
   end
 
   def active_requested_services
-    Service.where(status: 'active', customer_id: self.id)
+    Service.where(customer_id: self.id, status: 'active') # self.requested_services.where(status: 'active')
   end
 
   def active_provided_services
-    Serivce.where(status: 'active', provider_id: self.id)
+    Service.where(provider_id: self.id, status: 'active') # self.provided_services.where(status: 'active')
+  end
+
+  def pending_requested_services
+    Service.where(customer_id: self.id, status: 'pending')
+  end
+
+  def pending_provided_services
+    Service.where(provider_id: self.id, status: 'pending')
   end
 
   def active_serices
-    active_requested_services + active_provided_services
+    self.active_requested_services + self.active_provided_services
   end
 
   def pay(payee, amount)
@@ -179,8 +187,21 @@ class User < ActiveRecord::Base
     payee.balance += amount
   end
 
-  def self.frozen_balance
-    # listings.
+  def live_requested_services
+    self.pending_requested_services + self.active_requested_services
+  end
+
+  def frozen_balance(exclude_listing=nil)
+    listings_to_check = self.active_listings
+    (listings_to_check -= [Listing.find(exclude_listing)]) if exclude_listing
+    total = 0
+    listings_to_check.each do |listing|
+      total += listing.positions * listing.price
+    end
+    self.live_requested_services.each do |service|
+      total += service.hire_price
+    end
+    total
   end
   
   # def pay_with_frozen_balance(payee, amount)

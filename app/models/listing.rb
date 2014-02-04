@@ -25,6 +25,10 @@ class Listing < ActiveRecord::Base
     self.category == 'provider'
   end
 
+  def has_services?
+    !self.services.empty?
+  end
+
   def self.audiences
     ['everyone', 'friends']
   end
@@ -46,7 +50,7 @@ class Listing < ActiveRecord::Base
       self.status == 'active'
     end
     self.positions += 1
-    self.save!
+    self.save!(validate: false)
   end
 
   def live_services
@@ -71,9 +75,9 @@ class Listing < ActiveRecord::Base
   end
 
   def can_afford_listing?
-    balance_difference = self.user.balance.to_i - (self.price.to_i * self.positions.to_i)
+    balance_difference = self.user.balance.to_i - self.user.frozen_balance(self.id) - (self.price.to_i * self.positions.to_i)
     if balance_difference < 0
-      errors.add(:price, "Your balance must be atleast #{balance_difference.abs} to create this listing")
+      errors.add(:price, "Your balance must be at least $#{balance_difference.abs} more to create this listing")
     end
   end
 

@@ -31,6 +31,14 @@ Given(/^I create a listing with "(.*?)" input$/) do |type|
               start_time: "01/01/2010 12:00:00",
               end_time: "01/01/2015 12:00:00",
               audience: 'friends'}
+  elsif type = 'balance'
+      input = { price: '5',
+              title: 'balance listing',
+              description: 'balance listing description',
+              positions: '2',
+              start_time: "01/01/2010 12:00:00",
+              end_time: "01/01/2015 12:00:00",
+              audience: 'everyone'}
   end
   visit path_to("create listing page")
   fill_in("listing[price]", with: input[:price])
@@ -41,7 +49,6 @@ Given(/^I create a listing with "(.*?)" input$/) do |type|
   fill_in("listing[end_time]", with: input[:end_time])
   select(input[:audience], from: "listing[audience]")
   click_button("Save Listing")
-  assert !!Listing.find_by_title(input[:title])
 end
 
 Then(/^listing "(.*?)" should not exist$/) do |title|
@@ -82,7 +89,7 @@ Then(/^listing "(.*?)" should have status "(.*?)"$/) do |listing_title, status|
   listing.status == status
 end
 
-Given(/^"(.*?)" completes listing "(.*?)"$/) do |user_name, listing_title|
+Given(/^"twitteruser" completes listing "(.*?)"$/) do |listing_title|
   steps %{
     And I am signed in with provider "twitter"
     And I am on the show page for listing "#{listing_title}"
@@ -104,7 +111,7 @@ Then(/^"(.*?)" should not be hired for "(.*?)"$/) do |user_name, listing_title|
   !Listing.find_by_title(listing_title).services.find_by_provider_id(user_id)
 end
 
-Given(/^"(.*?)" quits listing "(.*?)"$/) do |arg1, listing_title|
+Given(/^"twitteruser" quits listing "(.*?)"$/) do |listing_title|
   steps %{
     And I am signed in with provider "twitter"
     And I am on the show page for listing "#{listing_title}"
@@ -113,28 +120,28 @@ Given(/^"(.*?)" quits listing "(.*?)"$/) do |arg1, listing_title|
   }
 end
 
-Given(/^"(.*?)" approves listing "(.*?)"$/) do |arg1, arg2|
+Given(/^"fbuser" approves listing "(.*?)"$/) do |listing_title|
   steps %{
     And I am signed in with provider "facebook"
-    And I am on the show page for listing "first listing"
+    And I am on the show page for listing "#{listing_title}"
     And I follow "Approve"
     And I accept the alert
   }
 end
 
-Given(/^"(.*?)" rehires me for listing "(.*?)"$/) do |arg1, arg2|
+Given(/^"fbuser" rehires me for listing "(.*?)"$/) do |listing_title|
   steps %{
     And I am signed in with provider "facebook"
-    And I am on the show page for listing "first listing"
+    And I am on the show page for listing "#{listing_title}"
     And I follow "Reject"
     And I press "Rehire"
   }
 end
 
-Given(/^"(.*?)" relists listing "(.*?)"$/) do |arg1, arg2|
+Given(/^"fbuser" relists listing "(.*?)"$/) do |listing_title|
   steps %{
     And I am signed in with provider "facebook"
-    And I am on the show page for listing "first listing"
+    And I am on the show page for listing "#{listing_title}"
     And I follow "Reject"
     And I press "Relist"
   }

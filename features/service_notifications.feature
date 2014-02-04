@@ -63,7 +63,7 @@ Scenario: When a user completes one of my jobs, I will receive a notification
 Scenario: When the lister approves one of my jobs, I will be receive a notification
   Given "twitteruser" is hired for "first listing"
   And "twitteruser" completes listing "first listing"
-  And "facebookuser" approves listing "first listing"
+  And "fbuser" approves listing "first listing"
   Given I am signed in with provider "twitter"
   And I am on the homepage
   And I follow "Bell icon"
@@ -75,7 +75,7 @@ Scenario: When the lister approves one of my jobs, I will be receive a notificat
 Scenario: When the lister rejects one of my jobs and rehires me, I will receive a notification
   Given "twitteruser" is hired for "first listing"
   And "twitteruser" completes listing "first listing"
-  And "facebookuser" rehires me for listing "first listing"
+  And "fbuser" rehires me for listing "first listing"
   And I am signed in with provider "twitter"
   And I am on the homepage
   And I follow "Bell icon"
@@ -87,7 +87,7 @@ Scenario: When the lister rejects one of my jobs and rehires me, I will receive 
 Scenario: When the lister rejects one of my jobs and relists, I will receive a notification
   Given "twitteruser" is hired for "first listing"
   And "twitteruser" completes listing "first listing"
-  And "facebookuser" relists listing "first listing"
+  And "fbuser" relists listing "first listing"
   And I am signed in with provider "twitter"
   And I am on the homepage
   And I follow "Bell icon"

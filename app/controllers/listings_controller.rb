@@ -44,6 +44,8 @@ class ListingsController < ApplicationController
     if params[:deactivate]
       @listing.status = 'inactive'
       @listing.save!
+      flash[:green] = 'You have successfully deactivated the listing.'
+      redirect_to @listing
     else
       if @listing.update(listing_params)
         flash[:green] = 'Listing was successfully updated.'
@@ -56,9 +58,14 @@ class ListingsController < ApplicationController
 
   # DELETE /listings/1
   def destroy
-    @listing.destroy
-    flash[:green] = 'Listing was successfully destroyed.'
-    redirect_to root_url
+    unless @listing.has_services?
+      @listing.destroy
+      flash[:green] = 'Listing was successfully destroyed.'
+      redirect_to root_url
+    else
+      flash[:red] = 'Cannot delete a listing after a user has been hired.'
+      redirect_to last_page
+    end
   end
 
   private

@@ -11,7 +11,7 @@ Feature: Service management
     And I am signed in with provider "twitter"
     And "twitteruser" is an admin user
     And I am on the signout page
-    And "fbuser" has a balance of "20"
+    And "fbuser" has a balance of "30"
 
     Given the following listings exist:
       | user_id  | title           | description  | start_time  | end_time  | status  | positions  | category  | audience  | price  |
@@ -84,6 +84,9 @@ Scenario: When a user is hired, they will be able to indicate when they complete
   Given "twitteruser" is hired for "first listing"
   And I am signed in with provider "twitter"
   And I am on the show page for listing "first listing"
+  When listing "first listing" has status "inactive"
+  Then I should see "Job Complete"
+  When listing "first listing" has status "active"
   And I follow "Job Complete"
   And I accept the alert
   Then I should be on the show page for listing "first listing"
@@ -97,6 +100,9 @@ Scenario: When a user is hired, they will be able to quit jobs they haven't comp
   Given "twitteruser" is hired for "first listing"
   And I am signed in with provider "twitter"
   And I am on the show page for listing "first listing"
+  When listing "first listing" has status "inactive"
+  Then I should see "Quit Job"
+  When listing "first listing" has status "active"
   And I follow "Quit Job"
   And I accept the alert
   Then I should be on the show page for listing "first listing"
@@ -112,6 +118,9 @@ Scenario: When a user is hired, they will be able to quit jobs they have complet
   And I follow "Job Complete"
   And I accept the alert
   Then I should see "Approval Pending"
+  When listing "first listing" has status "inactive"
+  Then I should see "Quit Job"
+  When listing "first listing" has status "active"
   And I follow "Quit Job"
   And I accept the alert
   Then I should be on the show page for listing "first listing"
@@ -125,6 +134,9 @@ Scenario: Listers will be able to approve jobs that are marked as completed
   And "twitteruser" completes listing "first listing"
   And I am signed in with provider "facebook"
   And I am on the show page for listing "first listing"
+  When listing "first listing" has status "inactive"
+  Then I should see "Approve"
+  When listing "first listing" has status "active"
   And I follow "Approve"
   And I accept the alert
   Then I should be on the show page for listing "first listing"
@@ -138,6 +150,9 @@ Scenario: Listers will be able to reactivate rejected jobs to the original hiree
   And "twitteruser" completes listing "first listing"
   And I am signed in with provider "facebook"
   And I am on the show page for listing "first listing"
+  When listing "first listing" has status "inactive"
+  Then I should see "Reject"
+  When listing "first listing" has status "active"
   And I follow "Reject"
   And I fill in "service[notes]" with "submit again"
   And I press "Rehire"
@@ -151,6 +166,9 @@ Scenario: Listers will be able to reactivate rejected jobs to the original audie
   And "twitteruser" completes listing "first listing"
   And I am signed in with provider "facebook"
   And I am on the show page for listing "first listing"
+  When listing "first listing" has status "inactive"
+  Then I should see "Reject"
+  When listing "first listing" has status "active"
   And I follow "Reject"
   And I fill in "service[notes]" with "you're fired"
   And I press "Relist"
@@ -165,3 +183,10 @@ Scenario: When a user is hired, they will not be able to apply to the same listi
   And I am on the show page for listing "second listing"
   And listing "second listing" should have status "active"
   Then I should not see "Apply"
+
+@javascript
+Scenario: When a listing has services, it can no longer be destroyed
+  Given "twitteruser" is hired for "first listing"
+  And I am signed in with provider "facebook"
+  And I am on the show page for listing "first listing"
+  Then I should not see "Delete Listing"

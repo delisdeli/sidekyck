@@ -116,6 +116,9 @@ Scenario: The listing owner should be able to deactivate their listing
   Given I am signed in with provider "facebook"
   And I am on the show page for listing "first listing"
   Then listing "first listing" should have status "active"
+  Then I should not see "Activate Listing"
   And I follow "Deactivate Listing"
   Then listing "first listing" should have status "inactive"
+  And I should not see "Deactivate Listing"
+  And I should see "Add positions to activate listing"
   
